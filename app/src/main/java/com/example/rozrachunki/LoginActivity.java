@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,32 +26,27 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         UserService userService = ApiUtils.getUserService();
+        EditText username = findViewById(R.id.username);
+        EditText password = findViewById(R.id.password);
 
         Button logowanie = findViewById(R.id.loginbtn);
         logowanie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Call<User> call = userService.message();
-                call.enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {
-                        Toast.makeText(LoginActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
-                    }
-                });
-
-
-
-                Call<User> call2 = userService.register(new User(null, "alala", "aakka@wp.pl", "haselko", "236785453"));
+                Call<User> call2 = userService.login(username.getText().toString(), password.getText().toString());
                 call2.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call2, Response<User> response) {
-
+                        if (response != null)
+                        {
+                            Toast.makeText(LoginActivity.this,"Zalogowano",Toast.LENGTH_LONG).show();
+                            //Intent intent = new Intent(view.getContext(), MainActivity.class);
+                            //view.getContext().startActivity(intent);
+                        }
+                        else {
+                            Toast.makeText(LoginActivity.this,"Nieprawidłowe dane",Toast.LENGTH_LONG).show();
+                        }
                     }
 
                     @Override
