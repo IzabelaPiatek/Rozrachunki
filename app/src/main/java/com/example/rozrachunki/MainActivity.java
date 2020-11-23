@@ -1,30 +1,91 @@
 package com.example.rozrachunki;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.strictmode.IntentReceiverLeakedViolation;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+        setContentView(R.layout.activity_main1);
+
+
+
+        //Initialize and assign variable
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        //Set groups selected
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+        //Perform ItemSelectedListener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.nav_groups:
+                        startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_friends:
+                        startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.nav_home:
+                         return true;
+                }
+                return false;
+            }
+        });
+
+        dl = findViewById(R.id.dl);
+        t = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
+        t.setDrawerIndicatorEnabled(true);
+
+        dl.addDrawerListener(t);
+        t.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        NavigationView nav_view = findViewById(R.id.nav_view);
+        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                int id = item.getItemId();
+
+                switch(id)
+                {
+                    case R.id.myaccount:
+                        startActivity(new Intent(getApplicationContext(), UserAccountActivity.class));
+                        break;
+                    case R.id.settings:
+                        Toast.makeText(MainActivity.this, "Settings",Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.logout:
+                        Toast.makeText(MainActivity.this, "Logout",Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        return true;
+                }
+                return true;
+            }
+        });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return t.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
 }

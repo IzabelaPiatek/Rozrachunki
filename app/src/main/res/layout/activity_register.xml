@@ -137,6 +137,7 @@
         app:layout_constraintBottom_toTopOf="@+id/username_text_input_layout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:passwordToggleEnabled="true"
+
         tools:ignore="MissingConstraints">
 
         <EditText

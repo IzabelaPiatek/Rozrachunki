@@ -2,12 +2,16 @@ package com.example.rozrachunki;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
+import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.example.rozrachunki.model.User;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.UserService;
@@ -19,43 +23,60 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
+    UserService userService;
+    EditText username, password;
+    AwesomeValidation awesomeValidation;
+    Button logowanie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
 
-        UserService userService = ApiUtils.getUserService();
-        EditText username = findViewById(R.id.username);
-        EditText password = findViewById(R.id.password);
+        userService = ApiUtils.getUserService();
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
 
-        Button logowanie = findViewById(R.id.loginbtn);
-        logowanie.setOnClickListener(new View.OnClickListener() {
+        awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
+
+        awesomeValidation.addValidation(this, R.id.loginAR, RegexTemplate.NOT_EMPTY, R.string.invalid_username);
+        awesomeValidation.addValidation(this, R.id.passwordAR, RegexTemplate.NOT_EMPTY, R.string.invalid_password);
+
+        logowanie = findViewById(R.id.loginbtn);
+        logowanie.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
+                String vUsername = username.getText().toString().trim();
+                String vPassword = password.getText().toString().trim();
 
-                Call<User> call2 = userService.login(username.getText().toString(), password.getText().toString());
-                call2.enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call2, Response<User> response) {
-                        if (response != null)
-                        {
-                            Toast.makeText(LoginActivity.this,"Zalogowano",Toast.LENGTH_LONG).show();
-                            //Intent intent = new Intent(view.getContext(), MainActivity.class);
-                            //view.getContext().startActivity(intent);
-                        }
-                        else {
-                            Toast.makeText(LoginActivity.this,"Nieprawidłowe dane",Toast.LENGTH_LONG).show();
-                        }
-                    }
+                    if(!vUsername.isEmpty() && !vPassword.isEmpty()) {
+                        Call<User> call2 = userService.login(username.getText().toString(), password.getText().toString());
+                        call2.enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call2, Response<User> response) {
+                                if (response != null) {
+                                    Toast.makeText(LoginActivity.this, "Zalogowano", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(view.getContext(), MainActivity.class);
+                                    view.getContext().startActivity(intent);
+                                } else {
+                                    Toast.makeText(LoginActivity.this, "Nieprawidłowe dane", Toast.LENGTH_LONG).show();
+                                }
+                            }
 
-                    @Override
-                    public void onFailure(Call<User> call2, Throwable t) {
-                        Toast.makeText(LoginActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
+                            @Override
+                            public void onFailure(Call<User> call2, Throwable t) {
+                                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }else {
+                        username.setError("Wprowadz nazwe uzytkownika!");
+                        password.setError("Wprowadz haslo!");
+
                     }
-                });
-                //Intent intent = new Intent(view.getContext(), RegisterActivity.class);
-                //view.getContext().startActivity(intent);
+                    //Intent intent = new Intent(view.getContext(), RegisterActivity.class);
+                    //view.getContext().startActivity(intent);
             }
         });
 

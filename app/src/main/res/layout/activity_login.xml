@@ -73,6 +73,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
+        app:errorEnabled="true"
         tools:ignore="MissingConstraints">
 
         <EditText
@@ -107,6 +108,7 @@
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:passwordToggleEnabled="true"
+        app:errorEnabled="true"
         tools:ignore="MissingConstraints">
 
         <EditText
@@ -152,10 +154,9 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.784"
- />
+        app:layout_constraintVertical_bias="0.784" />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/niepamietaszhasla"
         android:layout_width="190dp"
         android:layout_height="43dp"
@@ -175,14 +176,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginbtn"
         app:layout_constraintVertical_bias="0.0"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints" /> -->
 
     <TextView
         android:id="@+id/zarejestrujsie"
         android:layout_width="161dp"
         android:layout_height="43dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="38dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="60dp"
         android:fontFamily="@font/quicksandwght"
         android:gravity="center"
         android:text="Zarejestruj się"
@@ -193,8 +196,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/niepamietaszhasla"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/loginbtn"
         tools:ignore="MissingConstraints" />
 
     <ProgressBar
