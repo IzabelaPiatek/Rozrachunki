@@ -71,10 +71,15 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), UserAccountActivity.class));
                         break;
                     case R.id.settings:
-                        Toast.makeText(MainActivity.this, "Settings",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Ustawienia",Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.logout:
-                        Toast.makeText(MainActivity.this, "Logout",Toast.LENGTH_SHORT).show();
+                        /*finish();
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));*/
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        Toast.makeText(MainActivity.this, "Wylogowano",Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         return true;
