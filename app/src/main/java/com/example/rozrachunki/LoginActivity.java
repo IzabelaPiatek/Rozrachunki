@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
+import com.example.rozrachunki.classes.DataStorage;
 import com.example.rozrachunki.model.User;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.UserService;
@@ -56,8 +57,10 @@ public class LoginActivity extends AppCompatActivity {
                         call2.enqueue(new Callback<User>() {
                             @Override
                             public void onResponse(Call<User> call2, Response<User> response) {
+                                User respUser = response.body();
                                 if (response != null) {
                                     Toast.makeText(LoginActivity.this, "Zalogowano", Toast.LENGTH_LONG).show();
+                                    //DataStorage.setUser(respUser);
                                     Intent intent = new Intent(view.getContext(), MainActivity.class);
                                     view.getContext().startActivity(intent);
                                 } else {

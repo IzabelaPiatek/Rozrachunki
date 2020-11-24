@@ -10,7 +10,7 @@ import retrofit2.http.Path;
 
 public interface UserService {
 
-    @GET("login/{username}/{password}")
+    @GET("userslogin/{username}/{password}")
     Call<User> login(@Path("username") String username,
                      @Path("password") String password);
 
@@ -20,6 +20,12 @@ public interface UserService {
 
     @GET("mobile/hello")
     Call<User> message();
+
+    @HTTP(method = "POST", path = "users/updateUserData", hasBody = true)
+    Call<Integer> updateUserData(@Body User user);
+
+    @GET("users/get/{username}")
+    Call<User> get(@Path("username") String username);
 
 //    @HTTP(method = "POST", path = "send/{instructor}", hasBody = true)
 //    Call<Message> sendCoordinates(@Body ArrayList<LocationToSend> coordinates,
