@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
+import com.example.rozrachunki.classes.DataStorage;
 import com.example.rozrachunki.model.User;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.UserService;
@@ -67,22 +68,26 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(awesomeValidation.validate())
                 {
-
                     Call<User> call2 = userService.register(new User(null, username.getText().toString(), email.getText().toString(), password.getText().toString(), phone.getText().toString()));
                     call2.enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call2, Response<User> response) {
-                            //Intent intent = new Intent(view.getContext(), RegisterActivity.class);
-                            //view.getContext().startActivity(intent);
-                            if (response != null)
-                            {
-                                Toast.makeText(RegisterActivity.this,"Zarejestrowano",Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(view.getContext(), LoginActivity.class);
-                                view.getContext().startActivity(intent);
-                            }
-                            else {
-                                Toast.makeText(RegisterActivity.this,"Istnieje już taki użytkownik",Toast.LENGTH_LONG).show();
-                            }
+
+                            User resp = response.body();
+                            Toast.makeText(RegisterActivity.this, resp.getId(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(RegisterActivity.this, response.errorBody().toString(),Toast.LENGTH_LONG).show();
+                            //if (response.isSuccessful()) {
+                                if (resp != null)
+                                {
+
+                                    Toast.makeText(RegisterActivity.this,"Zarejestrowano pomyślnie",Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(view.getContext(), LoginActivity.class);
+                                    view.getContext().startActivity(intent);
+                                }
+                                else {
+                                    Toast.makeText(RegisterActivity.this,"Istnieje już taki użytkownik",Toast.LENGTH_LONG).show();
+                                }
+                            //}
                         }
 
                         @Override
