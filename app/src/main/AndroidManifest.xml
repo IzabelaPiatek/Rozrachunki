@@ -7,8 +7,8 @@
     <uses-feature android:name="android.hardware.type.watch" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -18,11 +18,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Rozrachunki">
-
-        <activity android:name=".CreateGroupActivity"
+        <activity
+            android:name=".AddFriendsActivity"
+            android:label="@string/title_activity_add_friends"
+            android:theme="@style/Theme.Rozrachunki.NoActionBar"></activity>
+        <activity android:name=".PaymentActivity" />
+        <activity
+            android:name=".CreateGroupActivity"
             android:label="Stwórz grupę"
-            android:parentActivityName=".GroupsActivity"
-            />
+            android:parentActivityName=".GroupsActivity" />
         <activity
             android:name=".GroupsActivity"
             android:label="Grupy" />
@@ -31,7 +35,6 @@
         <activity
             android:name=".FriendsActivity"
             android:label="Znajomi" />
-
         <activity
             android:name=".MainActivity"
             android:label="Rozrachunki" />
@@ -51,8 +54,7 @@
             android:name="com.google.android.maps"
             android:required="false" />
 
-        <activity
-            android:name=".SplashScreenActivity">
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
