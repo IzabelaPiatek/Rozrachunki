@@ -2,7 +2,6 @@ package com.example.rozrachunki;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,37 +51,32 @@ public class LoginActivity extends AppCompatActivity {
                 String vUsername = username.getText().toString().trim();
                 String vPassword = password.getText().toString().trim();
 
-                    if(!vUsername.isEmpty() && !vPassword.isEmpty()) {
-                        Call<User> call2 = userService.login(username.getText().toString(), password.getText().toString());
-                        call2.enqueue(new Callback<User>() {
-                            @Override
-                            public void onResponse(Call<User> call2, Response<User> response) {
-                                User respUser = response.body();
-                                if (response != null) {
-                                    Toast.makeText(LoginActivity.this, "Zalogowano", Toast.LENGTH_LONG).show();
-                                    //DataStorage.setUser(respUser);
-                                    Intent intent = new Intent(view.getContext(), MainActivity.class);
-                                    view.getContext().startActivity(intent);
-                                } else {
-                                    Toast.makeText(LoginActivity.this, "Nieprawidłowe dane", Toast.LENGTH_LONG).show();
-                                }
-                            }
+                if(!vUsername.isEmpty() && !vPassword.isEmpty()) {
+                    Call<User> call2 = userService.login(username.getText().toString(), password.getText().toString());
+                    call2.enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call2, Response<User> response) {
+                            User respUser = response.body();
 
-                            @Override
-                            public void onFailure(Call<User> call2, Throwable t) {
-                                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                            if (respUser != null) {
+                                DataStorage.setUser(respUser);
+                                Intent intent = new Intent(view.getContext(), MainActivity.class);
+                                view.getContext().startActivity(intent);
+                            } else {
+                                Toast.makeText(LoginActivity.this, "Nieprawidłowe dane logowania", Toast.LENGTH_LONG).show();
                             }
-                        });
-                    }else {
-                        username.setError("Wprowadz nazwe uzytkownika!");
-                        password.setError("Wprowadz haslo!");
-
-                    }
-                    //Intent intent = new Intent(view.getContext(), RegisterActivity.class);
-                    //view.getContext().startActivity(intent);
+                        }
+                        @Override
+                        public void onFailure(Call<User> call2, Throwable t) {
+                            Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }else {
+                    username.setError("Wprowadz nazwe uzytkownika!");
+                    password.setError("Wprowadz haslo!");
+                }
             }
         });
-
 
         TextView zarejestruj = findViewById(R.id.zarejestrujsie);
         zarejestruj.setOnClickListener(new View.OnClickListener() {
@@ -92,10 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                 view.getContext().startActivity(intent);
             }
         });
-
-
     }
-
 }
 
 

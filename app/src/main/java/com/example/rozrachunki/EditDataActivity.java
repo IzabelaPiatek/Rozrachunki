@@ -1,20 +1,27 @@
 package com.example.rozrachunki;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.rozrachunki.classes.DataStorage;
+import com.example.rozrachunki.model.User;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.UserService;
 
 import androidx.appcompat.app.AppCompatActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EditDataActivity extends AppCompatActivity {
 
     Button save;
     UserService userService = ApiUtils.getUserService();
-    //User user = DataStorage.getUser();
+    User user = DataStorage.getUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +32,16 @@ public class EditDataActivity extends AppCompatActivity {
         EditText email = findViewById(R.id.email_TV_fill);
         EditText number = findViewById(R.id.number_TV_fill);
 
-        //username.setText(user.getUsername());
-        //email.setText(user.getEmail());
-        //number.setText(user.getPhoneNumber());
+        username.setText(user.getUsername());
+        email.setText(user.getEmail());
+        number.setText(user.getPhoneNumber());
 
         save = findViewById(R.id.saveBTN);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Call<Integer> call2 = userService.updateUserData(new User(user.getId(), username.getText().toString(), email.getText().toString(), user.getPassword(), number.getText().toString()));
+                User savedUser = new User(user.getId(), username.getText().toString(), email.getText().toString(), user.getPassword(), number.getText().toString());
+                Call<Integer> call2 = userService.updateUserData(savedUser);
                 call2.enqueue(new Callback<Integer>() {
                     @Override
                     public void onResponse(Call<Integer> call2, Response<Integer> response) {
@@ -42,8 +50,9 @@ public class EditDataActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             if (resp != 0)
                             {
+                                DataStorage.setUser(savedUser);
                                 Toast.makeText(EditDataActivity.this,"Zmiany zostały zapisane",Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(view.getContext(), LoginActivity.class);
+                                Intent intent = new Intent(view.getContext(), UserAccountActivity.class);
                                 view.getContext().startActivity(intent);
                             }
                             else {
@@ -51,15 +60,12 @@ public class EditDataActivity extends AppCompatActivity {
                             }
                         }
                     }
-
                     @Override
                     public void onFailure(Call<Integer> call2, Throwable t) {
                         Toast.makeText(EditDataActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
                     }
-                });*/
-
+                });
             }
         });
-
     }
 }

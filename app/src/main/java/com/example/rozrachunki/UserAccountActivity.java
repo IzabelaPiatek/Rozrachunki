@@ -6,16 +6,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.rozrachunki.remote.ApiUtils;
-import com.example.rozrachunki.services.UserService;
+import com.example.rozrachunki.classes.DataStorage;
+import com.example.rozrachunki.model.User;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class UserAccountActivity extends AppCompatActivity {
 
     Button edit;
-    UserService userService = ApiUtils.getUserService();
-    //User user = DataStorage.getUser();
+    //UserService userService = ApiUtils.getUserService();
+    User user = DataStorage.getUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +27,9 @@ public class UserAccountActivity extends AppCompatActivity {
         TextView email = findViewById(R.id.email_TV_fill);
         TextView number = findViewById(R.id.number_TV_fill);
 
-        //username.setText(user.getUsername());
-        //email.setText(user.getEmail());
-        //number.setText(user.getPhoneNumber());
+        username.setText(user.getUsername());
+        email.setText(user.getEmail());
+        number.setText(user.getPhoneNumber());
 
         edit = findViewById(R.id.editDataBTN);
         edit.setOnClickListener(new View.OnClickListener() {
@@ -39,6 +39,5 @@ public class UserAccountActivity extends AppCompatActivity {
                 view.getContext().startActivity(intent);
             }
         });
-
     }
 }

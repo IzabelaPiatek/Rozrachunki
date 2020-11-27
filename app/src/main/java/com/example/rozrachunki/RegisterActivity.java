@@ -74,10 +74,10 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onResponse(Call<User> call2, Response<User> response) {
 
                             User resp = response.body();
-                            Toast.makeText(RegisterActivity.this, resp.getId(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(RegisterActivity.this, resp.getId(), Toast.LENGTH_LONG).show();
                             //Toast.makeText(RegisterActivity.this, response.errorBody().toString(),Toast.LENGTH_LONG).show();
                             //if (response.isSuccessful()) {
-                                if (resp != null)
+                                if (resp != null)  //resp
                                 {
 
                                     Toast.makeText(RegisterActivity.this,"Zarejestrowano pomyślnie",Toast.LENGTH_LONG).show();
