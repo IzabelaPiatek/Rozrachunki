@@ -48,15 +48,21 @@ public class EditDataActivity extends AppCompatActivity {
                         Integer resp = response.body();
 
                         if (response.isSuccessful()) {
-                            if (resp != 0)
+                            if (resp > 0)
                             {
                                 DataStorage.setUser(savedUser);
                                 Toast.makeText(EditDataActivity.this,"Zmiany zostały zapisane",Toast.LENGTH_LONG).show();
+                                UserAccountActivity.thisActivity.finish();
                                 Intent intent = new Intent(view.getContext(), UserAccountActivity.class);
                                 view.getContext().startActivity(intent);
+                                finish();
                             }
                             else {
-                                Toast.makeText(EditDataActivity.this,"Wystąpił błąd. Spróbuj ponownie.",Toast.LENGTH_LONG).show();
+                                if (resp == -1)
+                                    Toast.makeText(EditDataActivity.this,"Istnieje już użytkownik o takiej nazwie.",Toast.LENGTH_LONG).show();
+
+                                if (resp == -2)
+                                    Toast.makeText(EditDataActivity.this,"Istnieje już użytkownik o takim adresie email.",Toast.LENGTH_LONG).show();
                             }
                         }
                     }

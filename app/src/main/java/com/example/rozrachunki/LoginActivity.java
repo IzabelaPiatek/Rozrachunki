@@ -1,5 +1,6 @@
 package com.example.rozrachunki;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
+    public static Activity thisActivity;
     UserService userService;
     EditText username, password;
     AwesomeValidation awesomeValidation;
@@ -31,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        thisActivity = this;
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
 
@@ -62,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                                 DataStorage.setUser(respUser);
                                 Intent intent = new Intent(view.getContext(), MainActivity.class);
                                 view.getContext().startActivity(intent);
+                                finish();
                             } else {
                                 Toast.makeText(LoginActivity.this, "Nieprawidłowe dane logowania", Toast.LENGTH_LONG).show();
                             }

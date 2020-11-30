@@ -1,9 +1,5 @@
 package com.example.rozrachunki;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,28 +8,67 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.rozrachunki.classes.DataStorage;
+import com.example.rozrachunki.model.User;
+import com.example.rozrachunki.remote.ApiUtils;
+import com.example.rozrachunki.services.FriendshipService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class FriendsActivity extends AppCompatActivity implements SingleChoiceDialogFragment.SingleChoiceListener  {
 
     private ListView listview;
     private Button filterBTN, addFriendsBTN;
     private TextView filteredOption;
+    private FriendshipService friendshipService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
-
-
+        friendshipService = ApiUtils.getFriendshipService();
         listview = findViewById(R.id.listviewF);
 
-        ArrayList<String> arrayList = new ArrayList<>();
+        Call<ArrayList<User>> call2 = friendshipService.getUserFriends(DataStorage.getUser().getId());
+        call2.enqueue(new Callback<ArrayList<User>>() {
+            @Override
+            public void onResponse(Call<ArrayList<User>> call2, Response<ArrayList<User>> response) {
+                ArrayList<User> resp = response.body();
 
+                if (resp != null) {
+
+                    ArrayList<String> arrayList = new ArrayList<>();
+
+                    for (User user : resp) {
+                        arrayList.add(user.getUsername());
+                    }
+
+                    ArrayAdapter arrayAdapter = new ArrayAdapter(FriendsActivity.this, android.R.layout.simple_expandable_list_item_1, arrayList);
+                    listview.setAdapter(arrayAdapter);
+                } else {
+                    //Toast.makeText(FriendsActivity.this, "Nieprawidłowe dane logowania", Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<User>> call2, Throwable t) {
+                Toast.makeText(FriendsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //ArrayList<String> arrayList = new ArrayList<>();
+/*
         arrayList.add("Grupa wsparcia 2.0");
         arrayList.add("Anonimowi");
         arrayList.add("Grupa wsparcia 2.0");
@@ -42,9 +77,9 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
         arrayList.add("Grupa wsparcia 2.0");
         arrayList.add("Anonimowi");
         arrayList.add("Grupa mocnych");
-
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, arrayList);
-        listview.setAdapter(arrayAdapter);
+*/
+        //ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, arrayList);
+        //listview.setAdapter(arrayAdapter);
 
         filterBTN = findViewById(R.id.filterBTN);
         filterBTN.setOnClickListener(new View.OnClickListener() {

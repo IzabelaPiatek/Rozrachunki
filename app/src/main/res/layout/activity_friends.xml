@@ -80,7 +80,6 @@
             android:layout_marginRight="10dp"
             android:orientation="vertical">
 
-
             <ListView
                 android:id="@+id/listviewF"
                 android:layout_width="match_parent"

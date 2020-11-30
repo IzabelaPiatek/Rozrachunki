@@ -1,5 +1,6 @@
 package com.example.rozrachunki;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,10 +17,12 @@ public class UserAccountActivity extends AppCompatActivity {
     Button edit;
     //UserService userService = ApiUtils.getUserService();
     User user = DataStorage.getUser();
+    public static Activity thisActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        thisActivity = this;
         setContentView(R.layout.activity_user_account);
         getSupportActionBar().hide();
 
