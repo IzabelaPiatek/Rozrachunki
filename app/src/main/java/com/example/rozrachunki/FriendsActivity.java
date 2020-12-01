@@ -1,9 +1,11 @@
 package com.example.rozrachunki;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -21,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import retrofit2.Call;
@@ -33,6 +36,9 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
     private Button filterBTN, addFriendsBTN;
     private TextView filteredOption;
     private FriendshipService friendshipService;
+    private ArrayList<User> friends;
+    private ArrayAdapter arrayAdapter = null;
+    private ArrayList<String> arrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,20 +51,18 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
         call2.enqueue(new Callback<ArrayList<User>>() {
             @Override
             public void onResponse(Call<ArrayList<User>> call2, Response<ArrayList<User>> response) {
-                ArrayList<User> resp = response.body();
+                friends = response.body();
 
-                if (resp != null) {
+                if (friends != null) {
 
-                    ArrayList<String> arrayList = new ArrayList<>();
+                    arrayList = new ArrayList<>();
 
-                    for (User user : resp) {
+                    for (User user : friends) {
                         arrayList.add(user.getUsername());
                     }
 
-                    ArrayAdapter arrayAdapter = new ArrayAdapter(FriendsActivity.this, android.R.layout.simple_expandable_list_item_1, arrayList);
+                    arrayAdapter = new ArrayAdapter(FriendsActivity.this, android.R.layout.simple_expandable_list_item_1, arrayList);
                     listview.setAdapter(arrayAdapter);
-                } else {
-                    //Toast.makeText(FriendsActivity.this, "Nieprawidłowe dane logowania", Toast.LENGTH_LONG).show();
                 }
             }
             @Override
@@ -67,19 +71,41 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
             }
         });
 
-        //ArrayList<String> arrayList = new ArrayList<>();
-/*
-        arrayList.add("Grupa wsparcia 2.0");
-        arrayList.add("Anonimowi");
-        arrayList.add("Grupa wsparcia 2.0");
-        arrayList.add("Anonimowi");
-        arrayList.add("Grupa mocnych");
-        arrayList.add("Grupa wsparcia 2.0");
-        arrayList.add("Anonimowi");
-        arrayList.add("Grupa mocnych");
-*/
-        //ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, arrayList);
-        //listview.setAdapter(arrayAdapter);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                AlertDialog.Builder adb=new AlertDialog.Builder(FriendsActivity.this);
+                adb.setTitle("Delete?");
+                adb.setMessage("Are you sure you want to delete " + position);
+                final int positionToRemove = position;
+                adb.setNegativeButton("Cancel", null);
+                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Integer idFriend = 0;
+                        for (User friend : friends) {
+                            if (friend.getUsername().equals(arrayAdapter.getItem(position))) {
+                                idFriend = friend.getId();
+                            }
+                        }
+                        Call<Integer> call2 = friendshipService.delete(DataStorage.getUser().getId(), idFriend);
+                        call2.enqueue(new Callback<Integer>() {
+                            @Override
+                            public void onResponse(Call<Integer> call2, Response<Integer> response) {
+                                Integer resp = response.body();
+
+                                if (resp != null) {
+                                    arrayList.remove(positionToRemove);
+                                    arrayAdapter.notifyDataSetChanged();
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<Integer> call2, Throwable t) {
+                                Toast.makeText(FriendsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }});
+                adb.show();
+            }
+        });
 
         filterBTN = findViewById(R.id.filterBTN);
         filterBTN.setOnClickListener(new View.OnClickListener() {
