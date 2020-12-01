@@ -71,13 +71,13 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
             }
         });
 
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            public boolean onItemLongClick(AdapterView<?> a, View v, int position, long id) {
                 AlertDialog.Builder adb=new AlertDialog.Builder(FriendsActivity.this);
-                adb.setTitle("Delete?");
-                adb.setMessage("Are you sure you want to delete " + position);
+                adb.setTitle("Usuń");
+                adb.setMessage("Czy na pewno chcesz usunąć " + arrayAdapter.getItem(position) + " z listy znajomych?");
                 final int positionToRemove = position;
-                adb.setNegativeButton("Cancel", null);
+                adb.setNegativeButton("Anuluj", null);
                 adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Integer idFriend = 0;
@@ -104,6 +104,7 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
                         });
                     }});
                 adb.show();
+                return false;
             }
         });
 

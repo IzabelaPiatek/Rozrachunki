@@ -82,7 +82,8 @@
             <ListView
                 android:id="@+id/listviewF"
                 android:layout_width="match_parent"
-                android:layout_height="308dp" />
+                android:layout_height="308dp"
+                android:longClickable="true" />
             <Button
                 android:id="@+id/add_friendsBTN"
                 android:layout_width="204dp"
