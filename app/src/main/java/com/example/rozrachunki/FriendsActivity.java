@@ -1,8 +1,11 @@
 package com.example.rozrachunki;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,7 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rozrachunki.classes.DataStorage;
-import com.example.rozrachunki.model.User;
+import com.example.rozrachunki.model.Contact;
+import com.example.rozrachunki.model.Friendship;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.FriendshipService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -32,33 +36,44 @@ import retrofit2.Response;
 
 public class FriendsActivity extends AppCompatActivity implements SingleChoiceDialogFragment.SingleChoiceListener  {
 
+    public static Activity thisActivity;
     private ListView listview;
     private Button filterBTN, addFriendsBTN;
     private TextView filteredOption;
     private FriendshipService friendshipService;
-    private ArrayList<User> friends;
+    private ArrayList<Friendship> friends;
     private ArrayAdapter arrayAdapter = null;
     private ArrayList<String> arrayList = new ArrayList<>();
+    private ArrayList<Contact> contactList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        thisActivity = this;
         setContentView(R.layout.activity_friends);
         friendshipService = ApiUtils.getFriendshipService();
         listview = findViewById(R.id.listviewF);
+        contactList = getContacts();
 
-        Call<ArrayList<User>> call2 = friendshipService.getUserFriends(DataStorage.getUser().getId());
-        call2.enqueue(new Callback<ArrayList<User>>() {
+        Call<ArrayList<Friendship>> call2 = friendshipService.getUserFriends(DataStorage.getUser().getId());
+        call2.enqueue(new Callback<ArrayList<Friendship>>() {
             @Override
-            public void onResponse(Call<ArrayList<User>> call2, Response<ArrayList<User>> response) {
+            public void onResponse(Call<ArrayList<Friendship>> call2, Response<ArrayList<Friendship>> response) {
                 friends = response.body();
 
                 if (friends != null) {
 
                     arrayList = new ArrayList<>();
 
-                    for (User user : friends) {
-                        arrayList.add(user.getUsername());
+                    for (Friendship friendship : friends) {
+                        if (friendship.isHasAccount()) {
+                            arrayList.add(friendship.getUsername());
+                        } else if (friendship.getEmail() != null) {
+                            arrayList.add(friendship.getEmail());
+                        } else if (friendship.getPhoneNumber() != null) {
+                            arrayList.add(friendship.getPhoneNumber()); //contactList.forEach( (c) -> { if (c.getPhone().equals(friendship.getPhoneNumber())) return c; } )
+                        }
                     }
 
                     arrayAdapter = new ArrayAdapter(FriendsActivity.this, android.R.layout.simple_expandable_list_item_1, arrayList);
@@ -66,7 +81,7 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
                 }
             }
             @Override
-            public void onFailure(Call<ArrayList<User>> call2, Throwable t) {
+            public void onFailure(Call<ArrayList<Friendship>> call2, Throwable t) {
                 Toast.makeText(FriendsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
@@ -80,13 +95,28 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
                 adb.setNegativeButton("Anuluj", null);
                 adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Integer idFriend = 0;
-                        for (User friend : friends) {
-                            if (friend.getUsername().equals(arrayAdapter.getItem(position))) {
-                                idFriend = friend.getId();
+                        Integer friendshipId = 0;
+                        for (Friendship friend : friends) {
+
+                            if (friend.getUsername() != null && friend.isHasAccount()) {
+                                if (friend.getUsername().equals(arrayAdapter.getItem(position))) {
+                                    friendshipId = friend.getId();
+                                }
+                            }
+
+                            if (friend.getPhoneNumber() != null && !friend.isHasAccount()) {
+                                if (friend.getPhoneNumber().equals(arrayAdapter.getItem(position))) {
+                                    friendshipId = friend.getId();
+                                }
+                            }
+                            if (friend.getEmail() != null && !friend.isHasAccount())
+                            {
+                                if (friend.getEmail().equals(arrayAdapter.getItem(position))) {
+                                    friendshipId = friend.getId();
+                                }
                             }
                         }
-                        Call<Integer> call2 = friendshipService.delete(DataStorage.getUser().getId(), idFriend);
+                        Call<Integer> call2 = friendshipService.delete(friendshipId);
                         call2.enqueue(new Callback<Integer>() {
                             @Override
                             public void onResponse(Call<Integer> call2, Response<Integer> response) {
@@ -162,6 +192,22 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
                 return false;
             }
         });
+    }
+
+    private ArrayList<Contact> getContacts() {
+        ArrayList<Contact> list = new ArrayList<>();
+        Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+        while(phones.moveToNext()){
+            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            String photoUri = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+
+            Contact contact = new Contact(name, phoneNumber, photoUri);
+
+            list.add(contact);
+        }
+
+        return list;
     }
 
     public void addFabFunction(View view) {
