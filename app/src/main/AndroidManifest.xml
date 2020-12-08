@@ -21,9 +21,12 @@
         android:theme="@style/Theme.Rozrachunki">
         <activity
             android:name=".AddFriendsActivity"
-            android:label="@string/title_activity_add_friends"
+            android:label="Dodaj znajomych"
             android:theme="@style/Theme.Rozrachunki.NoActionBar"></activity>
-        <activity android:name=".PaymentActivity" />
+        <activity android:name=".PaymentActivity"
+            android:label="Dodaj płatność"
+            android:parentActivityName=".FriendsActivity"
+            />
         <activity
             android:name=".CreateGroupActivity"
             android:label="Stwórz grupę"

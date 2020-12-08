@@ -1,9 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PaymentActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nazwa grupy :"
+                android:textColor="@color/blue2"
+                android:textSize="15sp" />
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Opis"
+                android:textColor="@color/blue2"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/opis_ET_fill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Wprowadź opis"
+                android:drawableLeft="@drawable/ic_baseline_description"
+                android:fontFamily="sans-serif-light"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kwota"
+                android:textColor="@color/blue2"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/kwota_ET_fill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="0,00 zł"
+                android:drawableLeft="@drawable/ic_baseline_monetization"
+                android:inputType="number"
+                android:fontFamily="sans-serif-light"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/choose_paymentBTN"
+                android:layout_width="171dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:text="Wybierz opcję płatności" />
+
+            <TextView
+                android:id="@+id/payment_TV_fill"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginEnd="5dp"
+                android:fontFamily="sans-serif-light"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/choose_dataBTN"
+                android:layout_width="171dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:text="Ustaw datę" />
+
+            <TextView
+                android:id="@+id/date_TV_fill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginEnd="5dp"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notatka"
+                android:textColor="@color/blue2"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/notatka_ET_fill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Wprowadź notatkę"
+                android:fontFamily="sans-serif-light"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/choose_image_paymentBTN"
+                android:text="Dodaj zdjęcie"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/image_view_choose_image_payment"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_choose_image" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>

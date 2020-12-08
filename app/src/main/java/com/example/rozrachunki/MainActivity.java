@@ -3,8 +3,13 @@ package com.example.rozrachunki;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rozrachunki.classes.DataStorage;
+import com.example.rozrachunki.model.User;
+import com.example.rozrachunki.remote.ApiUtils;
+import com.example.rozrachunki.services.UserService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -17,11 +22,17 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
+    UserService userService = ApiUtils.getUserService();
+    User user = DataStorage.getUser();
+    TextView welcome;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main1);
 
+
+        welcome = findViewById(R.id.welcomeTV);
+        welcome.setText("Witaj, " + user.getUsername() + " !");
 
 
         //Initialize and assign variable
