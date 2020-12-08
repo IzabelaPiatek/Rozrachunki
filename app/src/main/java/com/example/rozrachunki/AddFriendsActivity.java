@@ -9,7 +9,11 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.rozrachunki.classes.ContactAdapter;
@@ -30,6 +34,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,7 +43,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddFriendsActivity extends AppCompatActivity {
+public class AddFriendsActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
     public static Activity thisActivity;
     RecyclerView recyclerView;
@@ -46,6 +51,7 @@ public class AddFriendsActivity extends AppCompatActivity {
     ContactAdapter contactAdapter;
     FriendshipService friendshipService = ApiUtils.getFriendshipService();
     AlertDialog alertDialog;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +93,6 @@ public class AddFriendsActivity extends AppCompatActivity {
                     }
                 }).check();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
@@ -130,6 +127,9 @@ public class AddFriendsActivity extends AppCompatActivity {
                     }
                 })
         );
+        //searchView = findViewById(R.id.action_search);
+
+        //searchView.setOnQueryTextListener(this);
     }
 
     private void getContacts() {
@@ -189,5 +189,41 @@ public class AddFriendsActivity extends AppCompatActivity {
         Intent intent = new Intent(AddFriendsActivity.this, FriendsActivity.class);
         AddFriendsActivity.this.startActivity(intent);
         AddFriendsActivity.this.finish();
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String text) {
+        String userInput = text.toLowerCase(Locale.getDefault());
+        List<Contact> newList = new ArrayList<>();
+
+        for(Contact contact : contactList){
+            if(contact.getName().toLowerCase(Locale.getDefault()).contains(userInput)){
+                newList.add(contact);
+            }
+        }
+
+        contactAdapter.updateList(newList);
+
+        return true;
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_friends_search_menu, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+
+        return true;
     }
 }
