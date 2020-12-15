@@ -1,35 +1,33 @@
 package com.example.rozrachunki;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rozrachunki.classes.Contact;
 import com.example.rozrachunki.classes.DataStorage;
-import com.example.rozrachunki.model.Contact;
-import com.example.rozrachunki.model.Friendship;
+import com.example.rozrachunki.classes.Friend;
+import com.example.rozrachunki.classes.FriendsAdapter;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.FriendshipService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,14 +35,18 @@ import retrofit2.Response;
 public class FriendsActivity extends AppCompatActivity implements SingleChoiceDialogFragment.SingleChoiceListener  {
 
     public static Activity thisActivity;
-    private ListView listview;
+    private RecyclerView recyclerView;
     private Button filterBTN, addFriendsBTN;
     private TextView filteredOption;
     private FriendshipService friendshipService;
-    private ArrayList<Friendship> friends;
-    private ArrayAdapter arrayAdapter = null;
-    private ArrayList<String> arrayList = new ArrayList<>();
+    private ArrayList<Friend> friends;
+    private FriendsAdapter friendsAdapter = null;
+    private ArrayList<Friend> friendsList = new ArrayList<>();
     private ArrayList<Contact> contactList = new ArrayList<>();
+
+
+    //list.stream().filter(p -> p.age >= 30).collect(Collectors.toCollection(() -> new ArrayList<Person>()))
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,39 +55,46 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
         thisActivity = this;
         setContentView(R.layout.activity_friends);
         friendshipService = ApiUtils.getFriendshipService();
-        listview = findViewById(R.id.listviewF);
         contactList = getContacts();
 
-        Call<ArrayList<Friendship>> call2 = friendshipService.getUserFriends(DataStorage.getUser().getId());
-        call2.enqueue(new Callback<ArrayList<Friendship>>() {
+        recyclerView = findViewById(R.id.listviewF);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //friendsAdapter = new FriendsAdapter(FriendsActivity.this, friendsList);
+        //recyclerView.setAdapter(friendsAdapter);
+
+        Call<ArrayList<Friend>> call2 = friendshipService.getUserFriends(DataStorage.getUser().getId());
+        call2.enqueue(new Callback<ArrayList<Friend>>() {
             @Override
-            public void onResponse(Call<ArrayList<Friendship>> call2, Response<ArrayList<Friendship>> response) {
+            public void onResponse(Call<ArrayList<Friend>> call2, Response<ArrayList<Friend>> response) {
                 friends = response.body();
-
                 if (friends != null) {
+                    friendsList = new ArrayList<>();
 
-                    arrayList = new ArrayList<>();
-
-                    for (Friendship friendship : friends) {
-                        if (friendship.isHasAccount()) {
-                            arrayList.add(friendship.getUsername());
+                    for (Friend friend : friends) {
+                        friendsList.add(friend);
+                        /*if (friendship.isHasAccount()) {
+                            friendsList.add(friendship.getUsername());
                         } else if (friendship.getEmail() != null) {
-                            arrayList.add(friendship.getEmail());
+                            friendsList.add(friendship.getEmail());
                         } else if (friendship.getPhoneNumber() != null) {
-                            arrayList.add(friendship.getPhoneNumber()); //contactList.forEach( (c) -> { if (c.getPhone().equals(friendship.getPhoneNumber())) return c; } )
-                        }
+                            friendsList.add(friendship.getPhoneNumber()); //contactList.forEach( (c) -> { if (c.getPhone().equals(friendship.getPhoneNumber())) return c; } )
+                        }*/
+
+                        //friendsAdapter.notifyDataSetChanged();
                     }
 
-                    arrayAdapter = new ArrayAdapter(FriendsActivity.this, android.R.layout.simple_expandable_list_item_1, arrayList);
-                    listview.setAdapter(arrayAdapter);
+                    friendsAdapter = new FriendsAdapter(FriendsActivity.this, friendsList);
+                    recyclerView.setAdapter(friendsAdapter);
                 }
             }
             @Override
-            public void onFailure(Call<ArrayList<Friendship>> call2, Throwable t) {
+            public void onFailure(Call<ArrayList<Friend>> call2, Throwable t) {
                 Toast.makeText(FriendsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-
+/*
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> a, View v, int position, long id) {
                 AlertDialog.Builder adb=new AlertDialog.Builder(FriendsActivity.this);
@@ -123,7 +132,7 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
                                 Integer resp = response.body();
 
                                 if (resp != null) {
-                                    arrayList.remove(positionToRemove);
+                                    friendsList.remove(positionToRemove);
                                     arrayAdapter.notifyDataSetChanged();
                                 }
                             }
@@ -136,7 +145,7 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
                 adb.show();
                 return false;
             }
-        });
+        });*/
 
         filterBTN = findViewById(R.id.filterBTN);
         filterBTN.setOnClickListener(new View.OnClickListener() {
@@ -219,6 +228,18 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
     @Override
     public void onPositiveButtonClicked(String[] list, int position) {
         filteredOption.setText("Wybrana opcja: " + list[position]);
+        if (position == 0) {
+            friendsList = friends;
+        }
+        if (position == 1) {
+            friendsList = friends.stream().filter(f -> f.getYouOwe()!= 0).collect(Collectors.toCollection(() -> new ArrayList<Friend>()));
+        }
+        if (position == 2) {
+            friendsList = friends.stream().filter(f -> f.getOwesYou() != 0).collect(Collectors.toCollection(() -> new ArrayList<Friend>()));
+        }
+
+        friendsAdapter = new FriendsAdapter(FriendsActivity.this, friendsList);
+        recyclerView.setAdapter(friendsAdapter);
     }
 
     @Override

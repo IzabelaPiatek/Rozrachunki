@@ -1,8 +1,5 @@
 package com.example.rozrachunki;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,32 +7,62 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.rozrachunki.classes.DataStorage;
+import com.example.rozrachunki.model.Group;
+import com.example.rozrachunki.remote.ApiUtils;
+import com.example.rozrachunki.services.GroupService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GroupsActivity extends AppCompatActivity {
 
     private ListView listView;
     private Button creategroup;
+    private GroupService groupService;
+    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayList<Group> groups = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
 
+        groupService = ApiUtils.getGroupService();
+
         listView = findViewById(R.id.listview);
 
-        ArrayList<String> arrayList = new ArrayList<>();
+        Call<ArrayList<Group>> call2 = groupService.getUserGroups(DataStorage.getUser().getId());
+        call2.enqueue(new Callback<ArrayList<Group>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Group>> call2, Response<ArrayList<Group>> response) {
+                groups = response.body();
+                if (groups != null) {
 
-        arrayList.add("Grupa wsparcia 2.0");
-        arrayList.add("Anonimowi");
-        arrayList.add("Grupa mocnych");
+                    for (Group group : groups) {
+                        arrayList.add(group.getName());
+                    }
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, arrayList);
-        listView.setAdapter(arrayAdapter);
+                    arrayList.add("Zakopane 2020");
+                    arrayList.add("Mieszkanie");
 
+                    ArrayAdapter arrayAdapter = new ArrayAdapter(GroupsActivity.this, android.R.layout.simple_expandable_list_item_1, arrayList);
+                    listView.setAdapter(arrayAdapter);
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<Group>> call2, Throwable t) {
+                Toast.makeText(GroupsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
 
         creategroup = findViewById(R.id.button);
         creategroup.setOnClickListener(new View.OnClickListener() {

@@ -1,4 +1,4 @@
-package com.example.rozrachunki.model;
+package com.example.rozrachunki.classes;
 
 public class Contact {
 

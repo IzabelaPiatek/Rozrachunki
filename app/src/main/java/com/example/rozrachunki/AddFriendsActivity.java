@@ -10,21 +10,18 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.example.rozrachunki.classes.Contact;
 import com.example.rozrachunki.classes.ContactAdapter;
 import com.example.rozrachunki.classes.DataStorage;
 import com.example.rozrachunki.classes.RecyclerItemClickListener;
-import com.example.rozrachunki.model.Contact;
 import com.example.rozrachunki.model.Friendship;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.FriendshipService;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -105,7 +102,11 @@ public class AddFriendsActivity extends AppCompatActivity implements SearchView.
                                 //dismiss the dialog
                                 Contact contact = contactList.get(position);
 
-                                Friendship friendship = addFriend(view, null, contact.getPhone());
+                                Toast.makeText(AddFriendsActivity.this,"111111", Toast.LENGTH_LONG).show();
+
+                                Friendship friendship = addFriend(view, null, contact.getPhone(), contact.getName());
+
+                                Toast.makeText(AddFriendsActivity.this,"2222222", Toast.LENGTH_LONG).show();
 
                                 if (friendship != null)
                                 {
@@ -147,13 +148,16 @@ public class AddFriendsActivity extends AppCompatActivity implements SearchView.
         }
     }
 
-    private Friendship addFriend(View view, String email, String phoneNumber) {
+    private Friendship addFriend(View view, String email, String phoneNumber, String username) {
         final Friendship[] friendship = new Friendship[1];
-        Call<Friendship> call2 = friendshipService.add(new Friendship(null, DataStorage.getUser().getId(), null, false, false, null, email, phoneNumber));
+        Call<Friendship> call2 = friendshipService.add(new Friendship(null, DataStorage.getUser().getId(), null, false, false, username, email, phoneNumber));
+        Toast.makeText(AddFriendsActivity.this,"33333333", Toast.LENGTH_LONG).show();
         call2.enqueue(new Callback<Friendship>() {
             @Override
             public void onResponse(Call<Friendship> call2, Response<Friendship> response) {
                 Friendship resp = response.body();
+
+                //Toast.makeText(AddFriendsActivity.this,resp.toString(), Toast.LENGTH_LONG).show();
 
                 if (resp != null)
                 {

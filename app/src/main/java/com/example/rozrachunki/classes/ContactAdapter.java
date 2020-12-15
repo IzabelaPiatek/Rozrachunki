@@ -5,22 +5,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
+
+import com.example.rozrachunki.R;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import com.example.rozrachunki.R;
-import com.example.rozrachunki.model.Contact;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
 
 public class ContactAdapter  extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> /*implements Filterable*/ {
     Context context;
@@ -32,7 +27,6 @@ public class ContactAdapter  extends RecyclerView.Adapter<ContactAdapter.Contact
         this.contactList = contactList;
         this.contactListFull = new ArrayList<Contact>();
         this.contactListFull.addAll(contactList);
-
     }
 
     @NonNull

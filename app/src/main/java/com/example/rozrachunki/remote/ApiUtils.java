@@ -1,6 +1,7 @@
 package com.example.rozrachunki.remote;
 
 import com.example.rozrachunki.services.FriendshipService;
+import com.example.rozrachunki.services.GroupService;
 import com.example.rozrachunki.services.UserService;
 
 public class ApiUtils {
@@ -13,5 +14,9 @@ public class ApiUtils {
 
     public static FriendshipService getFriendshipService(){
         return RetrofitClient.getClient(BASE_URL).create(FriendshipService.class);
+    }
+
+    public static GroupService getGroupService(){
+        return RetrofitClient.getClient(BASE_URL).create(GroupService.class);
     }
 }
