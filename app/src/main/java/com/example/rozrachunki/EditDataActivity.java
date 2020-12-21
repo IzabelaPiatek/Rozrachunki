@@ -40,7 +40,7 @@ public class EditDataActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User savedUser = new User(user.getId(), username.getText().toString(), email.getText().toString(), user.getPassword(), number.getText().toString());
+                User savedUser = new User(user.getId(), username.getText().toString(), email.getText().toString(), user.getPassword(), number.getText().toString(), true);
                 Call<Integer> call2 = userService.updateUserData(savedUser);
                 call2.enqueue(new Callback<Integer>() {
                     @Override

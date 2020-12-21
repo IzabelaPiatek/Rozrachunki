@@ -1,5 +1,7 @@
 package com.example.rozrachunki.model;
 
+import java.sql.Blob;
+
 public class Group {
     private Integer id;
 
@@ -9,9 +11,9 @@ public class Group {
 
     private boolean settled;
 
-    private byte[] image;
+    private Blob image;
 
-    public Group(Integer id, String name, Integer type, boolean settled, byte[] image) {
+    public Group(Integer id, String name, Integer type, boolean settled, Blob image) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -54,11 +56,11 @@ public class Group {
         this.settled = settled;
     }
 
-    public byte[] getImage() {
+    public Blob getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(Blob image) {
         this.image = image;
     }
 }

@@ -1,6 +1,8 @@
 package com.example.rozrachunki;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import com.example.rozrachunki.classes.Contact;
 import com.example.rozrachunki.classes.DataStorage;
 import com.example.rozrachunki.classes.Friend;
 import com.example.rozrachunki.classes.FriendsAdapter;
+import com.example.rozrachunki.classes.RecyclerItemClickListener;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.FriendshipService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -94,6 +97,45 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
                 Toast.makeText(FriendsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+
+
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) { // delete item
+                        AlertDialog.Builder adb=new AlertDialog.Builder(FriendsActivity.this);
+                        adb.setTitle("Usuń");
+                        adb.setMessage("Czy na pewno chcesz usunąć " + friendsList.get(position).getUsername() + " z listy znajomych?");
+                        final int positionToRemove = position;
+                        adb.setNegativeButton("Anuluj", null);
+                        adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Integer friendshipId = 0;
+                                    friendshipId = friendsList.get(position).getId();
+                                Call<Integer> call2 = friendshipService.delete(friendshipId);
+                                call2.enqueue(new Callback<Integer>() {
+                                    @Override
+                                    public void onResponse(Call<Integer> call2, Response<Integer> response) {
+                                        Integer resp = response.body();
+
+                                        if (resp != null) {
+                                            friendsList.remove(positionToRemove);
+                                            friendsAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<Integer> call2, Throwable t) {
+                                        Toast.makeText(FriendsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }});
+                        adb.show();
+                    }
+                })
+        );
 /*
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> a, View v, int position, long id) {
@@ -166,7 +208,6 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
             }
         });
 
-
         filteredOption = findViewById(R.id.setFilterOption);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -230,12 +271,14 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
         filteredOption.setText("Wybrana opcja: " + list[position]);
         if (position == 0) {
             friendsList = friends;
+            //friendsList.add(new Friend(4, "user", 20, 0, null));
         }
         if (position == 1) {
             friendsList = friends.stream().filter(f -> f.getYouOwe()!= 0).collect(Collectors.toCollection(() -> new ArrayList<Friend>()));
         }
         if (position == 2) {
             friendsList = friends.stream().filter(f -> f.getOwesYou() != 0).collect(Collectors.toCollection(() -> new ArrayList<Friend>()));
+            //friendsList.add(new Friend(4, "user", 20, 0, null));
         }
 
         friendsAdapter = new FriendsAdapter(FriendsActivity.this, friendsList);

@@ -2,6 +2,7 @@ package com.example.rozrachunki.services;
 
 import com.example.rozrachunki.classes.Friend;
 import com.example.rozrachunki.model.Friendship;
+import com.example.rozrachunki.model.User;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,6 @@ public interface FriendshipService {
     @POST("friends/delete/{friendshipId}")
     Call<Integer> delete(@Path("friendshipId") Integer friendshipId);
 
-    @POST("friends/add")
-    Call<Friendship> add(@Body Friendship friendship);
+    @POST("friends/add/{userId}")
+    Call<Friendship> add(@Path("userId") Integer userId, @Body User user);
 }

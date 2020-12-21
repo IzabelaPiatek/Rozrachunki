@@ -61,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(awesomeValidation.validate())
                 {
-                    Call<User> call2 = userService.register(new User(null, username.getText().toString(), email.getText().toString(), password.getText().toString(), phone.getText().toString()));
+                    Call<User> call2 = userService.register(new User(null, username.getText().toString(), email.getText().toString(), password.getText().toString(), phone.getText().toString(), true));
                     call2.enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call2, Response<User> response) {

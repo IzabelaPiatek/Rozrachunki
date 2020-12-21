@@ -30,6 +30,7 @@ public class GroupsActivity extends AppCompatActivity {
     private GroupService groupService;
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<Group> groups = new ArrayList<>();
+    ArrayAdapter arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +46,24 @@ public class GroupsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ArrayList<Group>> call2, Response<ArrayList<Group>> response) {
                 groups = response.body();
+
+                //Toast.makeText(GroupsActivity.this, groups.toString(), Toast.LENGTH_LONG).show();
+
                 if (groups != null) {
 
                     for (Group group : groups) {
                         arrayList.add(group.getName());
                     }
 
-                    arrayList.add("Zakopane 2020");
-                    arrayList.add("Mieszkanie");
-
-                    ArrayAdapter arrayAdapter = new ArrayAdapter(GroupsActivity.this, android.R.layout.simple_expandable_list_item_1, arrayList);
+                    arrayAdapter = new ArrayAdapter(GroupsActivity.this, android.R.layout.simple_expandable_list_item_1, arrayList);
                     listView.setAdapter(arrayAdapter);
                 }
+
+                /*arrayList.add("Zakopane 2020");
+                arrayList.add("Mieszkanie");
+
+                arrayAdapter = new ArrayAdapter(GroupsActivity.this, android.R.layout.simple_expandable_list_item_1, arrayList);
+                listView.setAdapter(arrayAdapter);*/
             }
             @Override
             public void onFailure(Call<ArrayList<Group>> call2, Throwable t) {

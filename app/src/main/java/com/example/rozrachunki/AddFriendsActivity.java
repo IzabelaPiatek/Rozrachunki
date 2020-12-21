@@ -20,6 +20,7 @@ import com.example.rozrachunki.classes.ContactAdapter;
 import com.example.rozrachunki.classes.DataStorage;
 import com.example.rozrachunki.classes.RecyclerItemClickListener;
 import com.example.rozrachunki.model.Friendship;
+import com.example.rozrachunki.model.User;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.FriendshipService;
 import com.karumi.dexter.Dexter;
@@ -102,11 +103,8 @@ public class AddFriendsActivity extends AppCompatActivity implements SearchView.
                                 //dismiss the dialog
                                 Contact contact = contactList.get(position);
 
-                                Toast.makeText(AddFriendsActivity.this,"111111", Toast.LENGTH_LONG).show();
-
-                                Friendship friendship = addFriend(view, null, contact.getPhone(), contact.getName());
-
-                                Toast.makeText(AddFriendsActivity.this,"2222222", Toast.LENGTH_LONG).show();
+                                //jeżeli dodaję po username to trzeba będzie ustawiać hasAccount na true;
+                                Friendship friendship = addFriend(view, null, contact.getPhone(), contact.getName(), false);
 
                                 if (friendship != null)
                                 {
@@ -115,7 +113,6 @@ public class AddFriendsActivity extends AppCompatActivity implements SearchView.
                                     //alertDialog.dismiss();
                                     finishActivity();
                                 }
-
                             }
                         });
                         dlgAlert.setCancelable(true);
@@ -148,16 +145,14 @@ public class AddFriendsActivity extends AppCompatActivity implements SearchView.
         }
     }
 
-    private Friendship addFriend(View view, String email, String phoneNumber, String username) {
+    private Friendship addFriend(View view, String email, String phoneNumber, String username, boolean hasAccount) {
         final Friendship[] friendship = new Friendship[1];
-        Call<Friendship> call2 = friendshipService.add(new Friendship(null, DataStorage.getUser().getId(), null, false, false, username, email, phoneNumber));
-        Toast.makeText(AddFriendsActivity.this,"33333333", Toast.LENGTH_LONG).show();
+        //jeżeli dodaję po username to trzeba ustawić hasAccount na true;
+        Call<Friendship> call2 = friendshipService.add(DataStorage.getUser().getId(), new User(null, username, email, null, phoneNumber, hasAccount));
         call2.enqueue(new Callback<Friendship>() {
             @Override
             public void onResponse(Call<Friendship> call2, Response<Friendship> response) {
                 Friendship resp = response.body();
-
-                //Toast.makeText(AddFriendsActivity.this,resp.toString(), Toast.LENGTH_LONG).show();
 
                 if (resp != null)
                 {

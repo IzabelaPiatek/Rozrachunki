@@ -6,13 +6,15 @@ public class User {
     private String email;
     private String password;
     private String phoneNumber;
+    private boolean hasAccount = true;
 
-    public User(Integer id, String username, String email, String password, String phoneNumber) {
+    public User(Integer id, String username, String email, String password, String phoneNumber, Boolean hasAccount) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.hasAccount = hasAccount;
     }
 
     public User() {}
@@ -56,4 +58,8 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public boolean isHasAccount() { return hasAccount; }
+
+    public void setHasAccount(boolean hasAccount) { this.hasAccount = hasAccount; }
 }
