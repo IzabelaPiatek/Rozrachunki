@@ -1,6 +1,6 @@
-package com.example.rozrachunki.model;
+package com.example.rozrachunki.classes;
 
-public class Group {
+public class GroupJson {
     private Integer id;
 
     private String name;
@@ -9,21 +9,9 @@ public class Group {
 
     private boolean settled;
 
-    private byte[] image;
+    private String image;
 
-    public enum types {
-        ZAKUPY(0),
-        WYJSCIE_NA_MIASTO(1),
-        INNE(2);
-
-        private final int value;
-
-        private types(int value) {
-            this.value = value;
-        }
-    }
-
-    public Group(Integer id, String name, Integer type, boolean settled, byte[] image) {
+    public GroupJson(Integer id, String name, Integer type, boolean settled, String image) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -66,11 +54,11 @@ public class Group {
         this.settled = settled;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 }

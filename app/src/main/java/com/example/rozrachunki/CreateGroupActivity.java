@@ -1,23 +1,37 @@
 package com.example.rozrachunki;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.rozrachunki.classes.GroupJson;
+import com.example.rozrachunki.model.Group;
+import com.example.rozrachunki.remote.ApiUtils;
+import com.example.rozrachunki.services.GroupService;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CreateGroupActivity extends AppCompatActivity {
 
@@ -25,6 +39,8 @@ public class CreateGroupActivity extends AppCompatActivity {
     Button chooseImage;
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int PERMISSION_CODE = 1001;
+    Uri uri;
+    GroupService groupService = ApiUtils.getGroupService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +106,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             //set image to image view
             imageView.setImageURI(data.getData());
+            uri = data.getData();
         }
     }
 
@@ -104,9 +121,84 @@ public class CreateGroupActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if( id == R.id.save){
-            Toast.makeText(CreateGroupActivity.this, "Zapisz grupę", Toast.LENGTH_LONG).show();
+            RadioGroup radioGroup = (RadioGroup) findViewById(R.id.typeRadioGroup);
+            int radioButtonID = radioGroup.getCheckedRadioButtonId();
+            RadioButton radioButton = (RadioButton) radioGroup.findViewById(radioButtonID);
+            String selectedText = (String) radioButton.getText();
+
+            EditText editTextName = findViewById(R.id.username_ET_fill);
+
+            byte[] inputData = null;
+            if (uri != null)
+            {
+                try {
+                    InputStream iStream =   getContentResolver().openInputStream(uri);
+                    inputData = getBytes(iStream);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            Integer type = 0;
+
+            if (selectedText.equals("Zakupy"))
+            {
+                type = 0;
+            } else if (selectedText.equals("Wypad na miasto"))
+            {
+                type = 1;
+            } else if (selectedText.equals("Inne"))
+            {
+                type = 2;
+            }
+
+           // int type = radioButton.getText()
+
+            Call<GroupJson> call2 = groupService.add(new Group(null, editTextName.getText().toString(), type, false, inputData));
+            call2.enqueue(new Callback<GroupJson>() {
+                @Override
+                public void onResponse(Call<GroupJson> call2, Response<GroupJson> response) {
+                    GroupJson resp = response.body();
+
+                    if (resp != null)
+                    {
+                        
+                        Toast.makeText(CreateGroupActivity.this,"Zapisano pomyślnie", Toast.LENGTH_LONG).show();
+                        //LoginActivity.thisActivity.finish();
+                        //Intent intent = new Intent(view.getContext(), LoginActivity.class);
+                        //view.getContext().startActivity(intent);
+                        //finish();
+                    }
+                    else {
+                        //friendship[0] = null;
+                        Toast.makeText(CreateGroupActivity.this,"Błąd dodawania grupy", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GroupJson> call2, Throwable t) {
+                    Toast.makeText(CreateGroupActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
+                }
+            });
+
+
+            //Toast.makeText(CreateGroupActivity.this, "Zapisz grupę", Toast.LENGTH_LONG).show();
 
         }
         return true;
+    }
+
+    public byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
     }
 }
