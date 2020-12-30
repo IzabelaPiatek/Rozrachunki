@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.rozrachunki.classes.DataStorage;
-import com.example.rozrachunki.model.Group;
+import com.example.rozrachunki.classes.GroupJson;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.GroupService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -29,7 +29,7 @@ public class GroupsActivity extends AppCompatActivity {
     private Button creategroup;
     private GroupService groupService;
     ArrayList<String> arrayList = new ArrayList<>();
-    ArrayList<Group> groups = new ArrayList<>();
+    ArrayList<GroupJson> groups = new ArrayList<>();
     ArrayAdapter arrayAdapter;
 
     @Override
@@ -41,17 +41,17 @@ public class GroupsActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listview);
 
-        Call<ArrayList<Group>> call2 = groupService.getUserGroups(DataStorage.getUser().getId());
-        call2.enqueue(new Callback<ArrayList<Group>>() {
+        Call<ArrayList<GroupJson>> call2 = groupService.getUserGroups(DataStorage.getUser().getId());
+        call2.enqueue(new Callback<ArrayList<GroupJson>>() {
             @Override
-            public void onResponse(Call<ArrayList<Group>> call2, Response<ArrayList<Group>> response) {
+            public void onResponse(Call<ArrayList<GroupJson>> call2, Response<ArrayList<GroupJson>> response) {
                 groups = response.body();
 
                 //Toast.makeText(GroupsActivity.this, groups.toString(), Toast.LENGTH_LONG).show();
 
                 if (groups != null) {
 
-                    for (Group group : groups) {
+                    for (GroupJson group : groups) {
                         arrayList.add(group.getName());
                     }
 
@@ -66,7 +66,7 @@ public class GroupsActivity extends AppCompatActivity {
                 listView.setAdapter(arrayAdapter);*/
             }
             @Override
-            public void onFailure(Call<ArrayList<Group>> call2, Throwable t) {
+            public void onFailure(Call<ArrayList<GroupJson>> call2, Throwable t) {
                 Toast.makeText(GroupsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
