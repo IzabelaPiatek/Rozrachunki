@@ -75,6 +75,7 @@ public class GroupsActivity extends AppCompatActivity {
         creategroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //startActivity(new Intent(GroupsActivity.this, CreateGroupActivity.class));
                 startActivity(new Intent(GroupsActivity.this, CreateGroupActivity.class));
 
             }
