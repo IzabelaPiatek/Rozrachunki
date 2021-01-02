@@ -52,6 +52,15 @@ public class GroupsActivity extends AppCompatActivity {
                 if (groups != null) {
 
                     for (GroupJson group : groups) {
+                        //Toast.makeText(GroupsActivity.this, group.getImage(), Toast.LENGTH_LONG).show();
+                        //byte[] bytes = group.getImage().getBytes();
+                        //Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                        //ImageView image = (ImageView) findViewById(R.id.imageView1);
+                        //image.setImageBitmap(Bitmap.createScaledBitmap(bmp, image.getWidth(), image.getHeight(), false));
+
+                        //Blob blob = new SerialBlob(bytes);
+
                         arrayList.add(group.getName());
                     }
 

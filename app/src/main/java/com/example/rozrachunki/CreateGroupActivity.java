@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.rozrachunki.classes.DataStorage;
 import com.example.rozrachunki.classes.GroupJson;
 import com.example.rozrachunki.model.Group;
 import com.example.rozrachunki.remote.ApiUtils;
@@ -131,14 +132,29 @@ public class CreateGroupActivity extends AppCompatActivity {
             byte[] inputData = null;
             if (uri != null)
             {
+                /*imageView.invalidate();
+                BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+                inputData = stream.toByteArray();
+
+                //bitmap.recycle();*/
+
                 try {
-                    InputStream iStream =   getContentResolver().openInputStream(uri);
+                    InputStream iStream = getContentResolver().openInputStream(uri);
                     inputData = getBytes(iStream);
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                //Toast.makeText(CreateGroupActivity.this,new String(inputData, StandardCharsets.UTF_8), Toast.LENGTH_LONG).show();
+                //Toast.makeText(CreateGroupActivity.this, Base64.getEncoder().encodeToString(inputData), Toast.LENGTH_LONG).show();
             }
 
             Integer type = 0;
@@ -156,7 +172,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
            // int type = radioButton.getText()
 
-            Call<GroupJson> call2 = groupService.add(new Group(null, editTextName.getText().toString(), type, false, inputData));
+            Call<GroupJson> call2 = groupService.add(new Group(null, editTextName.getText().toString(), type, false, inputData), DataStorage.getUser().getId());
             call2.enqueue(new Callback<GroupJson>() {
                 @Override
                 public void onResponse(Call<GroupJson> call2, Response<GroupJson> response) {

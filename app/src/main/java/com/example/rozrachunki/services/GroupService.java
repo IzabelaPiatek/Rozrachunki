@@ -16,6 +16,6 @@ public interface GroupService {
     @GET("groups/getUserGroups/{idUser}")
     Call<ArrayList<GroupJson>> getUserGroups(@Path("idUser") Integer idUser);
 
-    @POST("groups/add")
-    Call<GroupJson> add(@Body Group group);
+    @POST("groups/add/{idUser}")
+    Call<GroupJson> add(@Body Group group, @Path("idUser") Integer idUser);
 }
