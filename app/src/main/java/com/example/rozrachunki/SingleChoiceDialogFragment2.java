@@ -48,7 +48,7 @@ public class SingleChoiceDialogFragment2 extends DialogFragment {
                 .setPositiveButton("Wybierz", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        listener.onPositiveButtonClicked(list,position);
+                        listener.onPositiveButtonClicked(list, position);
 
                     }
                 })
