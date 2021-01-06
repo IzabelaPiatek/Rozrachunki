@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,9 @@ import android.widget.Toast;
 
 import com.example.rozrachunki.classes.DataStorage;
 import com.example.rozrachunki.classes.GroupJson;
+import com.example.rozrachunki.classes.InsertAmountsAdapter;
 import com.example.rozrachunki.classes.PaymentJson;
+import com.example.rozrachunki.classes.UserAmountPOJO;
 import com.example.rozrachunki.model.Breakdown;
 import com.example.rozrachunki.model.User;
 import com.example.rozrachunki.remote.ApiUtils;
@@ -38,12 +41,15 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,6 +70,7 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
     ArrayList<User> groupMembers = new ArrayList<>();
     ArrayList<User> selectedUsers = new ArrayList<>();
     ArrayList<GroupJson> groups = new ArrayList<GroupJson>();
+    ArrayList<UserAmountPOJO> usersDebtsAmounts = new ArrayList<UserAmountPOJO>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,10 +249,11 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
                     //po równo
                     breakdowns.add(new Breakdown(null, gm.getId(), Integer.parseInt(amount.getText().toString()) / selectedUsers.size(), null, false));
                 }
-                /*if (paymentOption == 2 || paymentOption == 3) {
+                if (paymentOption == 2 || paymentOption == 3) {
                     //na kwoty
+                    Integer kwota = usersDebtsAmounts.stream().filter(d -> d.getId() == gm.getId()).collect(Collectors.toCollection(() -> new ArrayList<UserAmountPOJO>())).get(0).getAmount();
                     breakdowns.add(new Breakdown(null, gm.getId(), kwota, null, false));
-                }*/
+                }
             }
 
 
@@ -343,11 +351,9 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
     public void checkPaymentOptionAndSetUsers() {
         if (paymentOption == 1 || paymentOption == 3) {
             showMultiChoiceDialogWithUsers();
-
-        //} else if (paymentOption == 3) {
-            //wyświetl
-            // groupMembers wszystkich i pola na kwoty
-
+        } else if (paymentOption == 2) {
+            showAmountsChoiceDialog(groupMembers);
+            selectedUsers = groupMembers;
         } else {
             selectedUsers = groupMembers;
         }
@@ -403,13 +409,11 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
                         }
                     }
                 }
+                dialog.dismiss();
+
                 if (paymentOption == 3) {
-
-                    //otwórz okienko przypisywania kwot
-
-
+                    showAmountsChoiceDialog(selectedUsers);
                 }
-
             }
         });
         builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
@@ -420,6 +424,46 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void showAmountsChoiceDialog(ArrayList<User> usersList) {
+        for (User u : usersList) {
+            usersDebtsAmounts.add(new UserAmountPOJO(u.getId(), u.getUsername(), 0));
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(PaymentActivity.this);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = (View) inflater.inflate(R.layout.dialog_insert_users_amounts, null);
+
+        builder.setTitle("Wprowadź kwoty");
+
+        builder.setView(dialogView);
+
+        RecyclerView rv = (RecyclerView) dialogView.findViewById(R.id.recyclerviewDialog);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(PaymentActivity.this));
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                for (int i = 0; i < usersDebtsAmounts.size(); i++) {
+                    View view = rv.getChildAt(i);
+                    EditText nameEditText = (EditText) view.findViewById(R.id.amount_EditText);
+                    usersDebtsAmounts.get(i).setAmount(Integer.parseInt(nameEditText.getText().toString()));
+                }
+            }
+        });
+
+        usersDebtsAmounts.add(new UserAmountPOJO(1, "ada", 0));
+
+        InsertAmountsAdapter adapter = new InsertAmountsAdapter(PaymentActivity.this, usersDebtsAmounts);
+        rv.setAdapter(adapter);
+
+        AlertDialog dialog1 = builder.create();
+
+        dialog1.show();
     }
 }
 
