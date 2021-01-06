@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.rozrachunki.classes.Contact;
 import com.example.rozrachunki.classes.ContactAdapter;
 import com.example.rozrachunki.classes.DataStorage;
+import com.example.rozrachunki.classes.Friend;
 import com.example.rozrachunki.classes.RecyclerItemClickListener;
 import com.example.rozrachunki.model.Friendship;
 import com.example.rozrachunki.model.User;
@@ -157,11 +158,13 @@ public class AddFriendsActivity extends AppCompatActivity implements SearchView.
                 if (resp != null)
                 {
                     friendship[0] = resp;
-                    //Toast.makeText(AddFriendsActivity.this,"Zarejestrowano pomyślnie", Toast.LENGTH_LONG).show();
-                    //LoginActivity.thisActivity.finish();
-                    //Intent intent = new Intent(view.getContext(), LoginActivity.class);
-                    //view.getContext().startActivity(intent);
-                    //finish();
+                    Toast.makeText(AddFriendsActivity.this,"Dodano znajomego", Toast.LENGTH_LONG).show();
+
+                    AddFriendsActivity.thisActivity.finish();
+                    Intent intent = new Intent(view.getContext(), FriendsActivity.class);
+                    view.getContext().startActivity(intent);
+
+                    finish();
                 }
                 else {
                     friendship[0] = null;
