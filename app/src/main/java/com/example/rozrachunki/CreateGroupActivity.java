@@ -1,6 +1,7 @@
 package com.example.rozrachunki;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -36,6 +37,7 @@ import retrofit2.Response;
 
 public class CreateGroupActivity extends AppCompatActivity {
 
+    public static Activity thisActivity;
     ImageView imageView;
     Button chooseImage;
     private static final int IMAGE_PICK_CODE = 1000;
@@ -47,6 +49,8 @@ public class CreateGroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
+
+        thisActivity = this;
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -186,6 +190,10 @@ public class CreateGroupActivity extends AppCompatActivity {
                         //Intent intent = new Intent(view.getContext(), LoginActivity.class);
                         //view.getContext().startActivity(intent);
                         //finish();
+                        CreateGroupActivity.thisActivity.finish();
+                        Intent intent = new Intent(thisActivity, GroupsActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                     else {
                         //friendship[0] = null;

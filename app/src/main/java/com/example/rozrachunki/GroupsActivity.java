@@ -1,9 +1,11 @@
 package com.example.rozrachunki;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -31,6 +33,7 @@ public class GroupsActivity extends AppCompatActivity {
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<GroupJson> groups = new ArrayList<>();
     ArrayAdapter arrayAdapter;
+    public static Activity thisActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class GroupsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_groups);
 
         groupService = ApiUtils.getGroupService();
+
+        thisActivity = this;
 
         listView = findViewById(R.id.listview);
 
@@ -64,7 +69,7 @@ public class GroupsActivity extends AppCompatActivity {
                         arrayList.add(group.getName());
                     }
 
-                    arrayAdapter = new ArrayAdapter(GroupsActivity.this, android.R.layout.simple_expandable_list_item_1, arrayList);
+                    arrayAdapter = new ArrayAdapter(GroupsActivity.this, R.layout.group_listview_style, R.id.TextView_group, arrayList);
                     listView.setAdapter(arrayAdapter);
                 }
 
@@ -87,6 +92,16 @@ public class GroupsActivity extends AppCompatActivity {
                 //startActivity(new Intent(GroupsActivity.this, CreateGroupActivity.class));
                 startActivity(new Intent(GroupsActivity.this, CreateGroupActivity.class));
 
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Toast.makeText(GroupsActivity.this, "I pick: " + arrayAdapter.getItem(position), Toast.LENGTH_LONG).show();
+                GroupsActivity.thisActivity.finish();
+                Intent intent = new Intent(thisActivity, DisplayGroupActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -114,5 +129,6 @@ public class GroupsActivity extends AppCompatActivity {
                 return false;
             }
         });
+
     }
 }

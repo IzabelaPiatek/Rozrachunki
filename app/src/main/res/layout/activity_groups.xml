@@ -34,10 +34,11 @@
         android:text="Stwórz nową grupę" />
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_height="583dp"
         android:id="@+id/listview"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="598dp"
+        android:layout_above="@+id/button"
+        android:layout_marginBottom="-1dp" />
 
     <!--<androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

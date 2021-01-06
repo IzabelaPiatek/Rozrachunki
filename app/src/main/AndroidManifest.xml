@@ -41,6 +41,8 @@
             android:label="Edytuj grupę" />
         <activity android:name=".EditDataActivity" />
         <activity android:name=".UserAccountActivity" />
+        <activity android:name=".DisplayGroupActivity"
+            android:label=""/>
         <activity
             android:name=".FriendsActivity"
             android:label="Znajomi" />
