@@ -2,6 +2,7 @@ package com.example.rozrachunki.services;
 
 import com.example.rozrachunki.classes.GroupJson;
 import com.example.rozrachunki.model.Group;
+import com.example.rozrachunki.model.User;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,9 @@ public interface GroupService {
     @GET("groups/getUserGroups/{idUser}")
     Call<ArrayList<GroupJson>> getUserGroups(@Path("idUser") Integer idUser);
 
-    @POST("groups/add")
-    Call<GroupJson> add(@Body Group group);
+    @POST("groups/add/{idUser}")
+    Call<GroupJson> add(@Body Group group, @Path("idUser") Integer idUser);
+
+    @GET("groupmembers/getGroupMembers/{idGroup}")
+    Call<ArrayList<User>> getGroupMembers(@Path("idGroup") Integer idGroup);
 }

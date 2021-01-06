@@ -56,10 +56,10 @@
         <item>Znajomi, którzy są dłużni tobie</item>
     </string-array>
     <string-array name="filter_choice_payment">
-        <item>Zapłącone przez Ciebie, podzielone równo</item>
-        <item>Jesteś winien pełną kwotę</item>
-        <item>Oni są winni całą kwotę</item>
-        <item>Zapłacone przez inną osobę, podzielone równo</item>
+        <item>Dzielone po równo między wszystkich</item>
+        <item>Dzielone po równo pomiędzy wybranych użytkowników</item>
+        <item>Dzielone między wszystkich z wprowadzeniem kwot</item>
+        <item>Dzielone między wybranych użytkowników z wprowadzeniem kwot</item>
     </string-array>
     <string name="title_activity_add_friends">AddFriendsActivity</string>
 </resources>

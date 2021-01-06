@@ -1,8 +1,10 @@
-package com.example.rozrachunki.model;
+package com.example.rozrachunki.classes;
 
-import java.util.Date;
+import com.example.rozrachunki.model.Breakdown;
 
-public class Payment {
+import java.util.ArrayList;
+
+public class PaymentJson {
     private Integer id;
 
     private Integer idGroup;
@@ -13,8 +15,7 @@ public class Payment {
 
     private String description;
 
-    //@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
-    private Date date;
+    private String date;
 
     private byte[] image;
 
@@ -23,6 +24,8 @@ public class Payment {
     private boolean settled = false;
 
     private Integer payment_option;
+
+    private ArrayList<Breakdown> breakdowns;
 
     public enum paymentOptions {
         PO_RÓWNO(0),
@@ -37,7 +40,7 @@ public class Payment {
         }
     }
 
-    public Payment(Integer id, Integer idGroup, Integer paidBy, Integer amount, String description, Date date, byte[] image, String note, boolean settled, Integer payment_option) {
+    public PaymentJson(Integer id, Integer idGroup, Integer paidBy, Integer amount, String description, String date, byte[] image, String note, boolean settled, Integer payment_option, ArrayList<Breakdown> breakdowns) {
         this.id = id;
         this.idGroup = idGroup;
         this.paidBy = paidBy;
@@ -48,9 +51,10 @@ public class Payment {
         this.note = note;
         this.settled = settled;
         this.payment_option = payment_option;
+        this.breakdowns = breakdowns;
     }
 
-    public Payment() {
+    public PaymentJson() {
     }
 
     public Integer getId() {
@@ -93,11 +97,11 @@ public class Payment {
         this.description = description;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -131,5 +135,13 @@ public class Payment {
 
     public void setPayment_option(Integer payment_option) {
         this.payment_option = payment_option;
+    }
+
+    public ArrayList<Breakdown> getBreakdowns() {
+        return breakdowns;
+    }
+
+    public void setBreakdowns(ArrayList<Breakdown> breakdowns) {
+        this.breakdowns = breakdowns;
     }
 }

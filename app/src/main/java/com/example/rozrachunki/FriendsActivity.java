@@ -103,6 +103,7 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
                 new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
 
+                        //TODO podgląd
 
                     }
 
