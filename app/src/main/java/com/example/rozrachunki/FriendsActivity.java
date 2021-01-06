@@ -90,6 +90,7 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
 
                     friendsAdapter = new FriendsAdapter(FriendsActivity.this, friendsList);
                     recyclerView.setAdapter(friendsAdapter);
+
                 }
             }
             @Override
