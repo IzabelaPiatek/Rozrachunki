@@ -47,12 +47,15 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_groups:
                         startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
                         overridePendingTransition(0,0);
+                        //finish();
                         return true;
                     case R.id.nav_friends:
                         startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
                         overridePendingTransition(0,0);
+                        //finish();
                         return true;
                     case R.id.nav_home:
+                        //finish();
                          return true;
                 }
                 return false;

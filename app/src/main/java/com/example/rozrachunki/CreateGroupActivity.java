@@ -52,7 +52,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         thisActivity = this;
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imageView = findViewById(R.id.image_view_choose_image);
         chooseImage = findViewById(R.id.choose_imageBTN);

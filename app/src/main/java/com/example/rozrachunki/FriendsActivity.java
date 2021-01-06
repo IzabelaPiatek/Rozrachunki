@@ -103,7 +103,11 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
                 new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
 
-                        //TODO podgląd
+                       // FriendsActivity.thisActivity.finish();
+                        Intent intent = new Intent(view.getContext(), FriendsBalanceActivity.class);
+                        view.getContext().startActivity(intent);
+
+                       // finish();
 
                     }
 
@@ -233,15 +237,19 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
                     case R.id.nav_home:
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.nav_groups:
                         startActivity(new Intent(getApplicationContext(), GroupsActivity .class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.nav_friends:
                         return true;
+                    default:
+                        return onNavigationItemSelected(item);
                 }
-                return false;
+                //return false;
             }
         });
     }

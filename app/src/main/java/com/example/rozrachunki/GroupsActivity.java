@@ -99,7 +99,7 @@ public class GroupsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Toast.makeText(GroupsActivity.this, "I pick: " + arrayAdapter.getItem(position), Toast.LENGTH_LONG).show();
-                GroupsActivity.thisActivity.finish();
+                //GroupsActivity.thisActivity.finish();
                 Intent intent = new Intent(thisActivity, DisplayGroupActivity.class);
                 startActivity(intent);
             }
@@ -118,10 +118,12 @@ public class GroupsActivity extends AppCompatActivity {
                     case R.id.nav_home:
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.nav_friends:
                         startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
                         overridePendingTransition(0,0);
+                        finish();
                         return true;
                     case R.id.nav_groups:
                         return true;

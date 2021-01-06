@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
+    android:layout_gravity="center_horizontal"
+    tools:context=".DisplayGroupActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue2"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageview_group"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="11dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="1dp"
+            android:textSize="15sp"
+            android:text="Nazwa uzytkownika" />
+
+
+        <TextView
+            android:id="@+id/user_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="1dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="1dp"
+            android:textSize="15sp"
+            android:text="333 555 666" />
+
+        <TextView
+            android:id="@+id/user_owes_you"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_number"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="1dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="1dp"
+            android:textSize="15sp"
+            android:text="nazwa użytkownika jest dluzna Tobie xx zł." />
+
+        <TextView
+            android:id="@+id/you_owe_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_owes_you"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="1dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="11dp"
+            android:textSize="15sp"
+            android:text="Ty jestes dluzna nazwie uzytkownika xx zł." />
+
+
+        <Button
+            android:id="@+id/settle_upBTN"
+            android:layout_width="150dp"
+            android:layout_height="46dp"
+            android:layout_centerHorizontal="true"
+            android:enabled="true"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="Rozlicz się"
+            android:layout_marginBottom="7dp"
+            android:textColor="@color/yellow" />
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/group_RecyclerView" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

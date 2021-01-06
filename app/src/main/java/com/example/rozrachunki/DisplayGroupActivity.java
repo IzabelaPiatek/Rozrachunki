@@ -60,7 +60,7 @@ public class DisplayGroupActivity extends AppCompatActivity {
 
         thisActivity = this;
         //getSupportActionBar().hide();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         displayGroupName = findViewById(R.id.group_name);
         groupImageView = findViewById(R.id.group_imageView);

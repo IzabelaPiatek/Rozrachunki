@@ -35,6 +35,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PaymentActivity extends AppCompatActivity implements SingleChoiceDialogFragment2.SingleChoiceListener{
+public class PaymentActivity extends AppCompatActivity implements SingleChoiceDialogFragment2.SingleChoiceListener, DatePickerDialog.OnDateSetListener{
     ImageView imageView;
     Button chooseImage, chooseOptions, chooseDate;
     private static final int IMAGE_PICK_CODE = 1000;
@@ -78,6 +79,7 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
         setContentView(R.layout.activity_payment);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         imageView = findViewById(R.id.image_view_choose_image_payment);
         chooseImage = findViewById(R.id.choose_image_paymentBTN);
@@ -149,14 +151,19 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
 
         filteredOption = findViewById(R.id.payment_TV_fill);
 
+
         displayDate = findViewById(R.id.date_TV_fill);
+
+        /*calendar = Calendar.getInstance();
+        String currentDate = DateFormat.getDateInstance().format(calendar.getTime());
+        displayDate.setText(currentDate);
+*/
         chooseDate = findViewById(R.id.choose_dataBTN);
         chooseDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                calendar = Calendar.getInstance();
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                /*int day = calendar.get(Calendar.DAY_OF_MONTH);
                 int month = calendar.get(Calendar.MONTH);
                 int year = calendar.get(Calendar.YEAR);
 
@@ -172,12 +179,31 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
                         //date = new Date(mYear, mMonth, mDay);
                     }
                 }, day, month, year);
-                datePickerDialog.show();
+                datePickerDialog.show();*/
+
+                showDatePickerDialog();
+
             }
         });
 
-
     }
+    private void showDatePickerDialog() {
+        datePickerDialog = new DatePickerDialog(
+                this, this,
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        );
+        datePickerDialog.show();
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int day, int month, int year) {
+        String date = year + "/" + (month + 1)+ "/" + day ;
+
+        displayDate.setText(date);
+    }
+
     private void pickImageFromGallerry() {
         //intent to pick image
         Intent intent = new Intent((Intent.ACTION_PICK));
@@ -465,5 +491,7 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
 
         dialog1.show();
     }
+
+
 }
 

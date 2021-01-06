@@ -20,35 +20,65 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Rozrachunki">
+
         <activity
-            android:name=".AddFriendsActivity"
-            android:label="Dodaj znajomych"
-            android:theme="@style/Theme.Rozrachunki.NoActionBar"></activity>
-        <activity android:name=".PaymentActivity"
-            android:label="Dodaj płatność"
+            android:name=".MainActivity"
+            android:label="Rozrachunki" />
+
+        <activity
+            android:name=".GroupsActivity"
+            android:label="Grupy"
+            android:parentActivityName=".MainActivity"
             />
-        <activity android:name=".AddMemberToGroupActivity"
-            android:label="Dodaj członka"/>
+
         <activity
             android:name=".CreateGroupActivity"
             android:label="Stwórz grupę"
             android:parentActivityName=".GroupsActivity" />
-        <activity
-            android:name=".GroupsActivity"
-            android:label="Grupy" />
+
+        <activity android:name=".DisplayGroupActivity"
+            android:parentActivityName=".GroupsActivity"
+            android:label=""/>
+
         <activity
             android:name=".EditGroupActivity"
-            android:label="Edytuj grupę" />
-        <activity android:name=".EditDataActivity" />
-        <activity android:name=".UserAccountActivity" />
-        <activity android:name=".DisplayGroupActivity"
-            android:label=""/>
+            android:label="Edytuj grupę"
+            android:parentActivityName=".DisplayGroupActivity"/>
+
+        <activity android:name=".AddMemberToGroupActivity"
+            android:label="Dodaj członka"/>
+
         <activity
             android:name=".FriendsActivity"
-            android:label="Znajomi" />
+            android:label="Znajomi"
+            android:parentActivityName=".MainActivity"
+            />
+
         <activity
-            android:name=".MainActivity"
-            android:label="Rozrachunki" />
+            android:name=".AddFriendsActivity"
+            android:label="Dodaj znajomych"
+            android:parentActivityName=".FriendsActivity"
+            android:theme="@style/Theme.Rozrachunki.NoActionBar"/>
+
+        <activity
+            android:name=".FriendsBalanceActivity"
+            android:parentActivityName=".FriendsActivity"
+            android:label="" />
+
+        <activity
+            android:name=".SettleUpActivity"
+            android:parentActivityName=".FriendsBalanceActivity"
+            android:label="Rozlicz się" />
+
+        <activity android:name=".PaymentActivity"
+            android:label="Dodaj płatność"
+            />
+
+        <activity android:name=".EditDataActivity" />
+        <activity android:name=".UserAccountActivity" />
+
+
+
 
         <uses-library
             android:name="com.google.android.maps"
