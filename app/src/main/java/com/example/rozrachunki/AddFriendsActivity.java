@@ -92,38 +92,38 @@ public class AddFriendsActivity extends AppCompatActivity implements SearchView.
                 }).check();
 
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
+            new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override public void onItemClick(View view, int position) {
 
-                        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(AddFriendsActivity.this);
-                        dlgAlert.setMessage("Czy chcesz dodać " + contactList.get(position).getName() + " do listy znajomych? Na podany numer wysłana zostanie wiadomość SMS z powiadomieniem." );
-                        dlgAlert.setTitle("Rozrachunki");
-                        dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                //dismiss the dialog
-                                Contact contact = contactList.get(position);
+                    AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(AddFriendsActivity.this);
+                    dlgAlert.setMessage("Czy chcesz dodać " + contactList.get(position).getName() + " do listy znajomych? Na podany numer wysłana zostanie wiadomość SMS z powiadomieniem." );
+                    dlgAlert.setTitle("Rozrachunki");
+                    dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //dismiss the dialog
+                            Contact contact = contactList.get(position);
 
-                                //jeżeli dodaję po username to trzeba będzie ustawiać hasAccount na true;
-                                Friendship friendship = addFriend(view, null, contact.getPhone(), contact.getName(), false);
+                            //jeżeli dodaję po username to trzeba będzie ustawiać hasAccount na true;
+                            Friendship friendship = addFriend(view, null, contact.getPhone(), contact.getName(), false);
 
-                                if (friendship != null)
-                                {
-                                    sendSMS(contact.getPhone());
-                                    Toast.makeText(AddFriendsActivity.this,"Wysłano wiadomość SMS.", Toast.LENGTH_LONG).show();
-                                    //alertDialog.dismiss();
-                                    finishActivity();
-                                }
+                            if (friendship != null)
+                            {
+                                sendSMS(contact.getPhone());
+                                Toast.makeText(AddFriendsActivity.this,"Wysłano wiadomość SMS.", Toast.LENGTH_LONG).show();
+                                //alertDialog.dismiss();
+                                finishActivity();
                             }
-                        });
-                        dlgAlert.setCancelable(true);
-                        AlertDialog alertDialog = dlgAlert.create();
-                        alertDialog.show();
-                    }
+                        }
+                    });
+                    dlgAlert.setCancelable(true);
+                    AlertDialog alertDialog = dlgAlert.create();
+                    alertDialog.show();
+                }
 
-                    @Override public void onLongItemClick(View view, int position) {
-                        // do whatever
-                    }
-                })
+                @Override public void onLongItemClick(View view, int position) {
+                    // do whatever
+                }
+            })
         );
         //searchView = findViewById(R.id.action_search);
 
