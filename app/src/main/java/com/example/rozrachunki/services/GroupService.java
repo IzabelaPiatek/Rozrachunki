@@ -22,4 +22,7 @@ public interface GroupService {
 
     @GET("groupmembers/getGroupMembers/{idGroup}")
     Call<ArrayList<User>> getGroupMembers(@Path("idGroup") Integer idGroup);
+
+    @GET("groups/get/{idGroup}")
+    Call<GroupJson> getGroup(@Path("idGroup") Integer idGroup);
 }

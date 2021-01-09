@@ -2,8 +2,11 @@ package com.example.rozrachunki;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +30,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,7 +46,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     Button chooseImage;
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int PERMISSION_CODE = 1001;
-    Uri uri;
+    Uri uri = null;
     GroupService groupService = ApiUtils.getGroupService();
 
     @Override
@@ -125,6 +129,10 @@ public class CreateGroupActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
+        /*if( id == R.id.){
+            CreateGroupActivity.this.finish();
+        }*/
+
         if( id == R.id.save){
             RadioGroup radioGroup = (RadioGroup) findViewById(R.id.typeRadioGroup);
             int radioButtonID = radioGroup.getCheckedRadioButtonId();
@@ -136,20 +144,18 @@ public class CreateGroupActivity extends AppCompatActivity {
             byte[] inputData = null;
             if (uri != null)
             {
-                /*imageView.invalidate();
-                BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-                Bitmap bitmap = drawable.getBitmap();
-
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-
-                inputData = stream.toByteArray();
-
-                //bitmap.recycle();*/
-
                 try {
-                    InputStream iStream = getContentResolver().openInputStream(uri);
-                    inputData = getBytes(iStream);
+                    Bitmap bitmap = decodeUri(CreateGroupActivity.this, uri, 500);
+                   // int width = bitmap.getWidth();
+                   // int height = bitmap.getHeight();
+
+                    int size = bitmap.getRowBytes() * bitmap.getHeight();
+                    ByteBuffer byteBuffer = ByteBuffer.allocate(size);
+                    bitmap.copyPixelsToBuffer(byteBuffer);
+                    inputData = byteBuffer.array();
+
+                    //InputStream iStream = getContentResolver().openInputStream(uri);
+                    //inputData = getBytes(iStream);
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -184,16 +190,10 @@ public class CreateGroupActivity extends AppCompatActivity {
 
                     if (resp != null)
                     {
-                        
                         Toast.makeText(CreateGroupActivity.this,"Zapisano pomyślnie", Toast.LENGTH_LONG).show();
-                        //LoginActivity.thisActivity.finish();
-                        //Intent intent = new Intent(view.getContext(), LoginActivity.class);
-                        //view.getContext().startActivity(intent);
-                        //finish();
-                        CreateGroupActivity.thisActivity.finish();
-                        Intent intent = new Intent(thisActivity, GroupsActivity.class);
-                        startActivity(intent);
-                        finish();
+
+                        Intent intent = new Intent(CreateGroupActivity.this, AddMemberToGroupActivity.class);
+                        CreateGroupActivity.this.startActivity(intent);
                     }
                     else {
                         //friendship[0] = null;
@@ -206,10 +206,6 @@ public class CreateGroupActivity extends AppCompatActivity {
                     Toast.makeText(CreateGroupActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
                 }
             });
-
-
-            //Toast.makeText(CreateGroupActivity.this, "Zapisz grupę", Toast.LENGTH_LONG).show();
-
         }
         return true;
     }
@@ -224,5 +220,28 @@ public class CreateGroupActivity extends AppCompatActivity {
             byteBuffer.write(buffer, 0, len);
         }
         return byteBuffer.toByteArray();
+    }
+
+    public static Bitmap decodeUri(Context c, Uri uri, final int requiredSize)
+            throws FileNotFoundException {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(c.getContentResolver().openInputStream(uri), null, o);
+
+        int width_tmp = o.outWidth
+                , height_tmp = o.outHeight;
+        int scale = 1;
+
+        while(true) {
+            if(width_tmp / 2 < requiredSize || height_tmp / 2 < requiredSize)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeStream(c.getContentResolver().openInputStream(uri), null, o2);
     }
 }

@@ -27,13 +27,13 @@ import retrofit2.Response;
 
 public class GroupsActivity extends AppCompatActivity {
 
+    public static Activity thisActivity;
     private ListView listView;
     private Button creategroup;
     private GroupService groupService;
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<GroupJson> groups = new ArrayList<>();
     ArrayAdapter arrayAdapter;
-    public static Activity thisActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +51,6 @@ public class GroupsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ArrayList<GroupJson>> call2, Response<ArrayList<GroupJson>> response) {
                 groups = response.body();
-
-                //Toast.makeText(GroupsActivity.this, groups.toString(), Toast.LENGTH_LONG).show();
 
                 if (groups != null) {
 
@@ -72,12 +70,6 @@ public class GroupsActivity extends AppCompatActivity {
                     arrayAdapter = new ArrayAdapter(GroupsActivity.this, R.layout.group_listview_style, R.id.TextView_group, arrayList);
                     listView.setAdapter(arrayAdapter);
                 }
-
-                /*arrayList.add("Zakopane 2020");
-                arrayList.add("Mieszkanie");
-
-                arrayAdapter = new ArrayAdapter(GroupsActivity.this, android.R.layout.simple_expandable_list_item_1, arrayList);
-                listView.setAdapter(arrayAdapter);*/
             }
             @Override
             public void onFailure(Call<ArrayList<GroupJson>> call2, Throwable t) {
@@ -89,7 +81,6 @@ public class GroupsActivity extends AppCompatActivity {
         creategroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(GroupsActivity.this, CreateGroupActivity.class));
                 startActivity(new Intent(GroupsActivity.this, CreateGroupActivity.class));
 
             }
@@ -98,9 +89,9 @@ public class GroupsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Toast.makeText(GroupsActivity.this, "I pick: " + arrayAdapter.getItem(position), Toast.LENGTH_LONG).show();
-                //GroupsActivity.thisActivity.finish();
+                //Toast.makeText(GroupsActivity.this, "I pick: " + arrayAdapter.getItem(position), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(thisActivity, DisplayGroupActivity.class);
+                intent.putExtra("id", groups.get(position).getId());
                 startActivity(intent);
             }
         });
