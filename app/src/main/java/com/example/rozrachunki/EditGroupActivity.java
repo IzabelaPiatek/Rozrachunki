@@ -1,6 +1,7 @@
 package com.example.rozrachunki;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -16,8 +17,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.rozrachunki.classes.GroupJson;
+import com.example.rozrachunki.remote.ApiUtils;
+import com.example.rozrachunki.services.GroupService;
+
 public class EditGroupActivity extends AppCompatActivity {
 
+
+    public static Activity thisActivity;
+    private GroupService groupService;
+    GroupJson group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +34,10 @@ public class EditGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_group);
 
        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        thisActivity = this;
+        groupService = ApiUtils.getGroupService();
+
 
     }
 

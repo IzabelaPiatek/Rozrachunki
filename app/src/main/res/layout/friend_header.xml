@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
     android:layout_gravity="center_horizontal"
-    tools:context=".DisplayGroupActivity">
+    tools:context=".DisplayGroupNoMemberActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

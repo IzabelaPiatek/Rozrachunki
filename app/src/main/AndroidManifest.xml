@@ -37,14 +37,17 @@
             android:label="Stwórz grupę"
             android:parentActivityName=".GroupsActivity" />
 
-        <activity android:name=".DisplayGroupActivity"
+        <activity android:name=".DisplayGroupNoMemberActivity"
             android:parentActivityName=".GroupsActivity"
             android:label=""/>
 
+        <activity android:name=".DisplayGroupActivity"
+            android:parentActivityName=".GroupsActivity"
+            android:label=""/>
         <activity
             android:name=".EditGroupActivity"
             android:label="Edytuj grupę"
-            android:parentActivityName=".DisplayGroupActivity"/>
+            android:parentActivityName=".DisplayGroupNoMemberActivity"/>
 
         <activity android:name=".AddMemberToGroupActivity"
             android:label="Dodaj członka"/>

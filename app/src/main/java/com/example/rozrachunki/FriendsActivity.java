@@ -22,7 +22,6 @@ import com.example.rozrachunki.classes.RecyclerItemClickListener;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.FriendshipService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -243,14 +242,14 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
 
         filteredOption = findViewById(R.id.setFilterOption);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        /*FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), PaymentActivity.class);
                 view.getContext().startActivity(intent);
             }
-        });
+        });*/
 
         //Initialize and assign variable
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

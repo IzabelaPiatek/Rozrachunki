@@ -40,6 +40,7 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.wear:wear:1.0.0'
     implementation 'androidx.drawerlayout:drawerlayout:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     //noinspection GradleCompatible
     implementation 'com.android.support:design:25.3.1'

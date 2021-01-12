@@ -192,7 +192,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                     {
                         Toast.makeText(CreateGroupActivity.this,"Zapisano pomyślnie", Toast.LENGTH_LONG).show();
 
-                        Intent intent = new Intent(CreateGroupActivity.this, AddMemberToGroupActivity.class);
+                        Intent intent = new Intent(CreateGroupActivity.this, GroupsActivity.class);
                         CreateGroupActivity.this.startActivity(intent);
                     }
                     else {
