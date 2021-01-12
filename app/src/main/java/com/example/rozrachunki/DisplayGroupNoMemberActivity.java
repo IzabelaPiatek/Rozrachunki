@@ -1,8 +1,6 @@
 package com.example.rozrachunki;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,47 +8,38 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.rozrachunki.classes.GroupJson;
+import com.example.rozrachunki.remote.ApiUtils;
+import com.example.rozrachunki.services.GroupService;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
-import com.example.rozrachunki.classes.GroupJson;
-import com.example.rozrachunki.classes.PageAdapter;
-import com.example.rozrachunki.remote.ApiUtils;
-import com.example.rozrachunki.services.GroupService;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabItem;
-import com.google.android.material.tabs.TabLayout;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DisplayGroupActivity extends AppCompatActivity {
+public class DisplayGroupNoMemberActivity extends AppCompatActivity {
 
-
-    public static Activity thisActivity;
-    GroupService groupService;
-    GroupJson group;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private TabItem tab1,tab2;
-    public PagerAdapter pagerAdapter;
     TextView displayGroupName;
     ImageView groupImageView;
     RecyclerView group_recyclerView;
+    public static Activity thisActivity;
+    private GroupService groupService;
+    GroupJson group;
+    Button addMember;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_group);
+        setContentView(R.layout.activity_display_group_no_member);
 
         thisActivity = this;
         groupService = ApiUtils.getGroupService();
@@ -61,37 +50,18 @@ public class DisplayGroupActivity extends AppCompatActivity {
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         displayGroupName = findViewById(R.id.group_name);
+        groupImageView = findViewById(R.id.group_imageView);
 
-        tabLayout = findViewById(R.id.table_layout);
-        tab1 = findViewById(R.id.members_item);
-        tab2 = findViewById(R.id.payments_item);
-        viewPager = findViewById(R.id.view_pager);
-        pagerAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(pagerAdapter);
+        group_recyclerView = findViewById(R.id.group_RecyclerView);
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        addMember = findViewById(R.id.add_memberBTN);
+        addMember.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-                if(tab.getPosition() == 0){
-                    pagerAdapter.notifyDataSetChanged();
-                } else if(tab.getPosition() == 1) {
-                    pagerAdapter.notifyDataSetChanged();
-                    }
-                }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), AddFriendsActivity.class);
+                view.getContext().startActivity(intent);
             }
         });
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         Call<GroupJson> call2 = groupService.getGroup(id);
         call2.enqueue(new Callback<GroupJson>() {
@@ -114,9 +84,20 @@ public class DisplayGroupActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<GroupJson> call2, Throwable t) {
-                Toast.makeText(DisplayGroupActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(DisplayGroupNoMemberActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+
+        /*FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), PaymentActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+*/
+
     }
 
     @Override
@@ -132,34 +113,30 @@ public class DisplayGroupActivity extends AppCompatActivity {
             case R.id.nav_edit_group:
                 //startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
                 //overridePendingTransition(0,0);
-
-                Toast.makeText(DisplayGroupActivity.this, "Edytuj grupę", Toast.LENGTH_LONG).show();
-                DisplayGroupActivity.thisActivity.finish();
+                Toast.makeText(DisplayGroupNoMemberActivity.this, "Edytuj grupę", Toast.LENGTH_LONG).show();
+                DisplayGroupNoMemberActivity.thisActivity.finish();
                 Intent intent = new Intent(thisActivity, EditGroupActivity.class);
                 startActivity(intent);
                 finish();
-
-
                 return true;
             case R.id.nav_delete_group:
                 //startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
                 //overridePendingTransition(0,0);
-                Toast.makeText(DisplayGroupActivity.this, "Grupa została usunięta", Toast.LENGTH_LONG).show();
-                DisplayGroupActivity.thisActivity.finish();
+                Toast.makeText(DisplayGroupNoMemberActivity.this, "Grupa została usunięta", Toast.LENGTH_LONG).show();
+                DisplayGroupNoMemberActivity.thisActivity.finish();
                 Intent intent2 = new Intent(thisActivity, GroupsActivity.class);
                 startActivity(intent2);
                 finish();
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
         //return false;
     }
-    /*public void addFabFunction(View view) {
+    public void addFabFunction(View view) {
 
         Intent intent = new Intent(view.getContext(), PaymentActivity.class);
         view.getContext().startActivity(intent);
-    }*/
+    }
 
 }

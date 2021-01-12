@@ -90,6 +90,7 @@ public class GroupsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 //Toast.makeText(GroupsActivity.this, "I pick: " + arrayAdapter.getItem(position), Toast.LENGTH_LONG).show();
+                //Intent intent = new Intent(thisActivity, DisplayGroupNoMemberActivity.class);
                 Intent intent = new Intent(thisActivity, DisplayGroupActivity.class);
                 intent.putExtra("id", groups.get(position).getId());
                 startActivity(intent);

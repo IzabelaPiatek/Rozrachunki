@@ -25,4 +25,5 @@ public interface GroupService {
 
     @GET("groups/get/{idGroup}")
     Call<GroupJson> getGroup(@Path("idGroup") Integer idGroup);
+
 }
