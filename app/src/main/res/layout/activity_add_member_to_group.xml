@@ -44,15 +44,4 @@
             android:id="@+id/LV_add_member_to_group" />
 
     </LinearLayout>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp"
-        android:layout_marginEnd="20dp"
-        app:srcCompat="@android:drawable/ic_input_add" />
 </LinearLayout>

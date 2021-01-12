@@ -1,5 +1,6 @@
 package com.example.rozrachunki;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -22,6 +23,12 @@ import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.FriendshipService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -47,9 +54,7 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
     private ArrayList<Friend> friendsList = new ArrayList<>();
     private ArrayList<Contact> contactList = new ArrayList<>();
 
-
-    //list.stream().filter(p -> p.age >= 30).collect(Collectors.toCollection(() -> new ArrayList<Person>()))
-
+    //list.stream().filter(p -> p.age >= 30).collect(Collectors.toCollection(() -> new ArrayList<Person>()));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +63,6 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
         thisActivity = this;
         setContentView(R.layout.activity_friends);
         friendshipService = ApiUtils.getFriendshipService();
-        contactList = getContacts();
 
         recyclerView = findViewById(R.id.listviewF);
         recyclerView.setHasFixedSize(true);
@@ -66,6 +70,29 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
 
         //friendsAdapter = new FriendsAdapter(FriendsActivity.this, friendsList);
         //recyclerView.setAdapter(friendsAdapter);
+
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.READ_CONTACTS)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        if(response.getPermissionName().equals(Manifest.permission.READ_CONTACTS)){
+                            getContacts();
+
+                            contactList = getContacts();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(FriendsActivity.this, "Persmission should be granted", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).check();
 
         Call<ArrayList<Friend>> call2 = friendshipService.getUserFriends(DataStorage.getUser().getId());
         call2.enqueue(new Callback<ArrayList<Friend>>() {

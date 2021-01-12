@@ -2,6 +2,7 @@ package com.example.rozrachunki;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.example.rozrachunki.classes.GroupJson;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.GroupService;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Base64;
 
@@ -67,16 +70,28 @@ public class DisplayGroupActivity extends AppCompatActivity {
 
                     byte[] backToBytes = Base64.getDecoder().decode(group.getImage());
 
+                    Bitmap bm = BitmapFactory.decodeByteArray(backToBytes, 0, backToBytes.length);
+
                     Drawable image = new BitmapDrawable(getResources(), BitmapFactory.decodeByteArray(backToBytes, 0, backToBytes.length));
 
                     if (image != null) {
                         groupImageView.setImageDrawable(image);
+                        //groupImageView.setImageBitmap(bm);
                     }
                 }
             }
             @Override
             public void onFailure(Call<GroupJson> call2, Throwable t) {
                 Toast.makeText(DisplayGroupActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        FloatingActionButton fab = findViewById(R.id.fab1);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), PaymentActivity.class);
+                view.getContext().startActivity(intent);
             }
         });
     }
