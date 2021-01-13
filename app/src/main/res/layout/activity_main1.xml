@@ -14,12 +14,41 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Witaj"
+        android:text=""
+        android:fontFamily="@font/sevillana"
         android:id="@+id/welcomeTV"
-        android:textSize="20sp"
+        android:textSize="25sp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="65dp"
+        android:layout_centerHorizontal="true"
         android:textStyle="bold"
-        android:layout_centerInParent="true"
         />
+
+
+    <ImageView
+        android:id="@+id/image_viewFlamingo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/welcomeTV"
+        android:src="@drawable/flamingo" />
+
+    <TextView
+        android:id="@+id/welcomeTV2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Drogi użytkowniku! \nCieszymy się, że wybrałeś naszą aplikację!
+        \n Dokonamy wszelkich starań, abyś używał jej jak najdłużej.
+        \n Miłego korzystania! :)"
+        android:layout_below="@+id/image_viewFlamingo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:fontFamily="@font/quicksandwght"
+        android:textSize="19sp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

@@ -1,17 +1,27 @@
 package com.example.rozrachunki;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +31,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class FragmentMembers extends Fragment {
 
     Button addMember;
+    public static Activity thisActivity;
+    final String[] items = new String[] { "Jarek Kaczmarek", "Angelika Kalika", "Kacper Kaca",
+            "Kamila Idylla", "Marek Parek", "Iza Ibiza", "Emilia Cecylia" };
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -73,6 +87,35 @@ public class FragmentMembers extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        int count = 1;
+        //Jeśli nie ma członków to wyświetl tego TextView
+        if (count == 0)
+        {
+            RelativeLayout llMain = view.findViewById(R.id.relative1);
+            TextView textView = new TextView(view.getContext());
+            textView.setText("Jesteś tu sam! Dodaj nowego członka, aby móc tworzyć rozliczenia!");
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+            );
+            textView.setLayoutParams(params);
+            textView.setTextSize(15);
+            textView.setPadding(50,50,50,50);
+            textView.setGravity(Gravity.CENTER);
+            llMain.addView(textView);
+        }
+        //Jeśli są członkowie to wyświetl listview
+        else if (count == 1)
+        {
+         // nie wiem czy może zostać listview ale jego po prostu łatwiej mi było oprogramować
+            ListView list = (ListView)view.findViewById(R.id.listviewFragment1);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items);
+            list.setAdapter(adapter);
+        }
+
+
+
 
         addMember = view.findViewById(R.id.add_memberBTN);
         addMember.setOnClickListener(new View.OnClickListener() {

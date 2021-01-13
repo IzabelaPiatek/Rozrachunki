@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         user = DataStorage.getUser();
 
         welcome = findViewById(R.id.welcomeTV);
-        welcome.setText("Witaj, " + user.getUsername() + " !");
+        welcome.setText("Witaj, " + user.getUsername() + "!");
 
 
         //Initialize and assign variable

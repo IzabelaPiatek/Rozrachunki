@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
+    android:id="@+id/relative2"
     android:layout_gravity="center_horizontal"
     tools:context=".DisplayGroupWithMemberActivity">
 
@@ -19,7 +20,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
+            <ListView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/listviewFragment2" />

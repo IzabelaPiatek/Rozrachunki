@@ -145,12 +145,12 @@ public class DisplayGroupActivity extends AppCompatActivity {
                 //startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
                 //overridePendingTransition(0,0);
 
-                Toast.makeText(DisplayGroupActivity.this, "Edytuj grupę", Toast.LENGTH_LONG).show();
-                DisplayGroupActivity.thisActivity.finish();
+                //Toast.makeText(DisplayGroupActivity.this, "Edytuj grupę", Toast.LENGTH_LONG).show();
+                //DisplayGroupActivity.thisActivity.finish();
                 Intent intent = new Intent(thisActivity, EditGroupActivity.class);
                 intent.putExtra("id", id);
                 startActivity(intent);
-                finish();
+                //finish();
 
                 return true;
             case R.id.nav_delete_group:

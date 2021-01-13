@@ -9,9 +9,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,7 +31,8 @@ public class FragmentPayment extends Fragment {
 
     public static Activity thisActivity;
     RecyclerView paymentList;
-
+    final String[] items = new String[] { "Browarek", "Pizza Per Te", "Zakupy Biedronka",
+            "Paliwko", "Ciastko w Anabilis", "Obiad w Alcali", "Bilety lotnicze" };
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -79,10 +86,36 @@ public class FragmentPayment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        paymentList = view.findViewById(R.id.listviewFragment2);
+       /* paymentList = view.findViewById(R.id.listviewFragment2);
         paymentList.setHasFixedSize(true);
-        paymentList.setLayoutManager(new LinearLayoutManager(thisActivity));
+        paymentList.setLayoutManager(new LinearLayoutManager(thisActivity));*/
 
+        int count = 0;
+
+        //Jeśli nie ma płatności to wyświetl tego TextView
+        if (count == 0)
+        {
+            RelativeLayout llMain = view.findViewById(R.id.relative2);
+            TextView textView = new TextView(view.getContext());
+            textView.setText("Nie dodano żadnej płatności");
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+            );
+            textView.setLayoutParams(params);
+            textView.setTextSize(15);
+            textView.setPadding(50,50,50,50);
+            textView.setGravity(Gravity.CENTER);
+            llMain.addView(textView);
+        }
+        //Jeśli są płatności to wyświetl listview
+        else if (count == 1)
+        {
+            // nie wiem czy może zostać listview ale jego po prostu łatwiej mi było oprogramować
+            ListView list = (ListView)view.findViewById(R.id.listviewFragment2);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items);
+            list.setAdapter(adapter);
+        }
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
