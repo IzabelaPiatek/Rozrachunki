@@ -40,9 +40,9 @@ public class GroupsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
 
+        thisActivity = this;
         groupService = ApiUtils.getGroupService();
 
-        thisActivity = this;
 
         listView = findViewById(R.id.listview);
 

@@ -31,7 +31,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
     @NonNull
     @Override
     public FriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_friend, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.friend_listview_style, parent, false);
         return new FriendViewHolder(view);
     }
 
@@ -63,13 +63,23 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         return friendsList.size();
     }
 
-    public class FriendViewHolder extends RecyclerView.ViewHolder {
+    /*public class FriendViewHolder extends RecyclerView.ViewHolder {
         TextView name_friend, owe_friend;
         CircleImageView img_friend;
         public FriendViewHolder(@NonNull View itemView) {
             super(itemView);
             name_friend = itemView.findViewById(R.id.name_friend);
             owe_friend = itemView.findViewById(R.id.owe_friend);
+            //img_friend = itemView.findViewById(R.id.img_friend);
+        }
+    }*/
+    public class FriendViewHolder extends RecyclerView.ViewHolder {
+        TextView name_friend, owe_friend;
+        CircleImageView img_friend;
+        public FriendViewHolder(@NonNull View itemView) {
+            super(itemView);
+            name_friend = itemView.findViewById(R.id.friend_name);
+            owe_friend = itemView.findViewById(R.id.friend_owe);
             //img_friend = itemView.findViewById(R.id.img_friend);
         }
     }

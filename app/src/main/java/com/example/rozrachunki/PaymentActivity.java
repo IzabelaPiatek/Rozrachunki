@@ -56,6 +56,7 @@ import retrofit2.Response;
 public class PaymentActivity extends AppCompatActivity implements SingleChoiceDialogFragment2.SingleChoiceListener, DatePickerDialog.OnDateSetListener{
     ImageView imageView;
     Button chooseImage, chooseOptions, chooseDate;
+    TextView fillGroupName;
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int PERMISSION_CODE = 1001;
     private TextView filteredOption, displayDate;
@@ -81,6 +82,7 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
 
         imageView = findViewById(R.id.image_view_choose_image_payment);
         chooseImage = findViewById(R.id.choose_image_paymentBTN);
+        fillGroupName = findViewById(R.id.fill_group_name);
 
         chooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +117,8 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
                 if (groups != null) {
 
                     for (GroupJson group : groups) {
+
+                        //fillGroupName.setText(group.getName());
 
                         //arrayList.add(group.getName());
                     }
@@ -289,7 +293,7 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
 
                     //TODO id group na sztywnoooooo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-            Call<PaymentJson> call2 = paymentService.add(new PaymentJson(null, 11, DataStorage.getUser().getId(), Integer.parseInt(amount.getText().toString()), description.getText().toString(), date, inputData, note.getText().toString(), false, paymentOption, breakdowns));
+            Call<PaymentJson> call2 = paymentService.add(new PaymentJson(null, 3, DataStorage.getUser().getId(), Integer.parseInt(amount.getText().toString()), description.getText().toString(), date, inputData, note.getText().toString(), false, paymentOption, breakdowns));
             call2.enqueue(new Callback<PaymentJson>() {
                 @Override
                 public void onResponse(Call<PaymentJson> call2, Response<PaymentJson> response) {

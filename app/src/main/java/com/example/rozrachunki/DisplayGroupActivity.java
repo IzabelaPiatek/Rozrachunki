@@ -32,8 +32,9 @@ public class DisplayGroupActivity extends AppCompatActivity {
 
 
     public static Activity thisActivity;
-    GroupService groupService;
+    private GroupService groupService;
     GroupJson group;
+    GroupJson group1;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private TabItem tab1,tab2;
@@ -41,6 +42,7 @@ public class DisplayGroupActivity extends AppCompatActivity {
     TextView displayGroupName;
     ImageView groupImageView;
     RecyclerView group_recyclerView;
+    Integer id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class DisplayGroupActivity extends AppCompatActivity {
         thisActivity = this;
         groupService = ApiUtils.getGroupService();
 
-        Integer id = getIntent().getExtras().getInt("id");
+        id = getIntent().getExtras().getInt("id");
 
         //getSupportActionBar().hide();
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -87,6 +89,7 @@ public class DisplayGroupActivity extends AppCompatActivity {
         });
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
 
         Call<GroupJson> call2 = groupService.getGroup(id);
         call2.enqueue(new Callback<GroupJson>() {
@@ -143,27 +146,40 @@ public class DisplayGroupActivity extends AppCompatActivity {
                 //overridePendingTransition(0,0);
 
                 Toast.makeText(DisplayGroupActivity.this, "Edytuj grupę", Toast.LENGTH_LONG).show();
-                //DisplayGroupActivity.thisActivity.finish();
+                DisplayGroupActivity.thisActivity.finish();
                 Intent intent = new Intent(thisActivity, EditGroupActivity.class);
+                intent.putExtra("id", id);
                 startActivity(intent);
                 finish();
 
-
                 return true;
             case R.id.nav_delete_group:
-                //startActivity(new Intent(getApplicationContext(), FriendsActivity.class));
-                //overridePendingTransition(0,0);
-                Toast.makeText(DisplayGroupActivity.this, "Grupa została usunięta", Toast.LENGTH_LONG).show();
-                DisplayGroupActivity.thisActivity.finish();
-                Intent intent2 = new Intent(thisActivity, GroupsActivity.class);
-                startActivity(intent2);
-                finish();
+
+                Call<Integer> call2 = groupService.delete(id);
+                call2.enqueue(new Callback<Integer>() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onResponse(Call<Integer> call2, Response<Integer> response) {
+                        Integer resp = response.body();
+
+                        if (resp != null) {
+                            Toast.makeText(DisplayGroupActivity.this, "Usunięto grupę", Toast.LENGTH_LONG).show();
+                            DisplayGroupActivity.thisActivity.finish();
+                            Intent intent = new Intent(thisActivity, GroupsActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<Integer> call2, Throwable t) {
+                        Toast.makeText(DisplayGroupActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
 
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-        //return false;
     }
     /*public void addFabFunction(View view) {
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -25,5 +26,11 @@ public interface GroupService {
 
     @GET("groups/get/{idGroup}")
     Call<GroupJson> getGroup(@Path("idGroup") Integer idGroup);
+
+    @POST("groups/delete/{idGroup}")
+    Call<Integer> delete(@Path("idGroup") Integer idGroup);
+
+    @HTTP(method = "POST", path = "groups/updateGroup", hasBody = true)
+    Call<Integer> updateGroup(@Body Group group);
 
 }
