@@ -1,25 +1,22 @@
 package com.example.rozrachunki;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rozrachunki.classes.GroupJson;
+import com.example.rozrachunki.classes.PageAdapter;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.GroupService;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -27,12 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import com.example.rozrachunki.classes.PageAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabItem;
-import com.google.android.material.tabs.TabLayout;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -126,6 +117,7 @@ public class DisplayGroupActivity extends AppCompatActivity {
             }
         });
 
+        /*
         FloatingActionButton fab = findViewById(R.id.fab1);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +125,7 @@ public class DisplayGroupActivity extends AppCompatActivity {
                 Intent intent = new Intent(view.getContext(), PaymentActivity.class);
                 view.getContext().startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
@@ -151,7 +143,7 @@ public class DisplayGroupActivity extends AppCompatActivity {
                 //overridePendingTransition(0,0);
 
                 Toast.makeText(DisplayGroupActivity.this, "Edytuj grupę", Toast.LENGTH_LONG).show();
-                DisplayGroupActivity.thisActivity.finish();
+                //DisplayGroupActivity.thisActivity.finish();
                 Intent intent = new Intent(thisActivity, EditGroupActivity.class);
                 startActivity(intent);
                 finish();

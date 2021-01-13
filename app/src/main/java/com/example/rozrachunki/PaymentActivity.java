@@ -35,12 +35,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -197,11 +195,17 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
         datePickerDialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onDateSet(DatePicker datePicker, int day, int month, int year) {
         String date = year + "/" + (month + 1)+ "/" + day ;
 
         displayDate.setText(date);
+
+        //SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        //this.date = format.format( new Calendar.Builder().setDate(year, month, day) );
+
+        this.date =  year + "-" + new DecimalFormat("00").format(month + 1)+ "-" + new DecimalFormat("00").format(day);
     }
 
     private void pickImageFromGallerry() {

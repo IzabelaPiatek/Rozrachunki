@@ -23,13 +23,15 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
     UserService userService = ApiUtils.getUserService();
-    User user = DataStorage.getUser();
+    User user;
     TextView welcome;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main1);
 
+        user = DataStorage.getUser();
 
         welcome = findViewById(R.id.welcomeTV);
         welcome.setText("Witaj, " + user.getUsername() + " !");

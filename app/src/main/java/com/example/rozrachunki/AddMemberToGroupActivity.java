@@ -92,9 +92,6 @@ public class AddMemberToGroupActivity extends AppCompatActivity {
 
         if( id == R.id.nav_edit_group){
 
-
-
-
             CreateGroupActivity.thisActivity.finish();
             GroupsActivity.thisActivity.finish();
             Intent intent = new Intent(AddMemberToGroupActivity.this, GroupsActivity.class);
