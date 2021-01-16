@@ -18,15 +18,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.rozrachunki.classes.DataStorage;
 import com.example.rozrachunki.classes.GroupJson;
 import com.example.rozrachunki.model.Group;
-import com.example.rozrachunki.model.User;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.GroupService;
 
@@ -34,6 +27,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -207,29 +204,27 @@ public class EditGroupActivity extends AppCompatActivity {
         if( id == R.id.save){
 
             // Powinno działać??
-            /*Group savedGroup = new Group(group.getId(), groupName.getText().toString(), radioType, false, inputData );
+            Group savedGroup = new Group(group.getId(), groupName.getText().toString(), radioType, false, inputData );
             Call<Integer> call2 = groupService.updateGroup(savedGroup);
             call2.enqueue(new Callback<Integer>() {
                 @Override
                 public void onResponse(Call<Integer> call2, Response<Integer> response) {
                     Integer resp = response.body();
 
-                        if (resp > 0)
-                        {
-                            //DataStorage.setUser(savedUser);
-                            Toast.makeText(EditGroupActivity.this,"Zmiany zostały zapisane",Toast.LENGTH_LONG).show();
-                            EditGroupActivity.thisActivity.finish();
-                            Intent intent = new Intent(thisActivity, DisplayGroupActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                        else {
-                            if (resp == -1)
-                                Toast.makeText(EditGroupActivity.this,"Istnieje już grupa o takiej nazwie.",Toast.LENGTH_LONG).show();
+                    if (resp >= 0)
+                    {
+                        //DataStorage.setUser(savedUser);
+                        Toast.makeText(EditGroupActivity.this,"Zmiany zostały zapisane",Toast.LENGTH_LONG).show();
 
-                            //if (resp == -2)
-                            //Toast.makeText(EditDataActivity.this,"Istnieje już  o takim adresie email.",Toast.LENGTH_LONG).show();
-                        }
+                        //EditGroupActivity.thisActivity.finish();
+                        //Intent intent = new Intent(EditGroupActivity.this, DisplayGroupActivity.class);
+                        //startActivity(intent);
+                        EditGroupActivity.this.finish();
+                    }
+                    else
+                    {
+                        Toast.makeText(EditGroupActivity.this,"Błąd zapisu.",Toast.LENGTH_LONG).show();
+                    }
 
                 }
                 @Override
@@ -237,7 +232,7 @@ public class EditGroupActivity extends AppCompatActivity {
                     Toast.makeText(EditGroupActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
                 }
             });
-*/
+
             Toast.makeText(EditGroupActivity.this, "NIC", Toast.LENGTH_LONG).show();
 
         }

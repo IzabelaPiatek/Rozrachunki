@@ -142,6 +142,7 @@ public class DisplayGroupActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.nav_edit_group:
+
                 //startActivity(new Intent(getApplicationContext(), GroupsActivity.class));
                 //overridePendingTransition(0,0);
 
