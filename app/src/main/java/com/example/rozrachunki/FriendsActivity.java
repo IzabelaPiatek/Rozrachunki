@@ -128,13 +128,19 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
+                        String username = friendsList.get(position).getUsername();
+                        int owesYou = friendsList.get(position).getOwesYou();
+                        int youOwe = friendsList.get(position).getYouOwe();
 
                        // FriendsActivity.thisActivity.finish();
+
                         Intent intent = new Intent(view.getContext(), FriendsBalanceActivity.class);
+                        intent.putExtra("username", username);
+                        intent.putExtra("owesYou", owesYou);
+                        intent.putExtra("youOwe", youOwe);
                         view.getContext().startActivity(intent);
 
                        // finish();
-
                     }
 
                     @Override public void onLongItemClick(View view, int position) { // delete item
