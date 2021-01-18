@@ -46,6 +46,8 @@ public class GroupsActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listview);
 
+        listView.setNestedScrollingEnabled(false);
+
         Call<ArrayList<GroupJson>> call2 = groupService.getUserGroups(DataStorage.getUser().getId());
         call2.enqueue(new Callback<ArrayList<GroupJson>>() {
             @Override
@@ -69,7 +71,9 @@ public class GroupsActivity extends AppCompatActivity {
 
                     arrayAdapter = new ArrayAdapter(GroupsActivity.this, R.layout.group_listview_style, R.id.TextView_group, arrayList);
                     listView.setAdapter(arrayAdapter);
+
                 }
+                arrayAdapter.notifyDataSetChanged();
             }
             @Override
             public void onFailure(Call<ArrayList<GroupJson>> call2, Throwable t) {
@@ -91,8 +95,10 @@ public class GroupsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 //Toast.makeText(GroupsActivity.this, "I pick: " + arrayAdapter.getItem(position), Toast.LENGTH_LONG).show();
                 //Intent intent = new Intent(thisActivity, DisplayGroupNoMemberActivity.class);
+
                 Intent intent = new Intent(thisActivity, DisplayGroupActivity.class);
                 intent.putExtra("id", groups.get(position).getId());
+                intent.putExtra("name", groups.get(position).getName());
                 startActivity(intent);
             }
         });

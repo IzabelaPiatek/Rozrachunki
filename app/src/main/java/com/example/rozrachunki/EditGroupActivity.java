@@ -54,7 +54,7 @@ public class EditGroupActivity extends AppCompatActivity {
     Uri uri = null;
     Integer radioType;
     byte[] inputData;
-
+    Integer type;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +106,6 @@ public class EditGroupActivity extends AppCompatActivity {
             public void onResponse(Call<GroupJson> call2, Response<GroupJson> response) {
                 group = response.body();
                 if (group != null) {
-
                     groupName.setText(group.getName());
                     radioType = group.getType();
                     if (radioType == 0)
@@ -203,8 +202,23 @@ public class EditGroupActivity extends AppCompatActivity {
 
         if( id == R.id.save){
 
-            // Powinno działać??
-            Group savedGroup = new Group(group.getId(), groupName.getText().toString(), radioType, false, inputData );
+            int radioButtonID = radioGroup.getCheckedRadioButtonId();
+            RadioButton radioButton = (RadioButton) radioGroup.findViewById(radioButtonID);
+            String selectedText = (String) radioButton.getText();
+            Integer type = 0;
+
+            if (selectedText.equals("Zakupy"))
+            {
+                type = 0;
+            } else if (selectedText.equals("Wypad na miasto"))
+            {
+                type = 1;
+            } else if (selectedText.equals("Inne"))
+            {
+                type = 2;
+            }
+
+            Group savedGroup = new Group(group.getId(), groupName.getText().toString(), type, false, inputData );
             Call<Integer> call2 = groupService.updateGroup(savedGroup);
             call2.enqueue(new Callback<Integer>() {
                 @Override
@@ -219,7 +233,18 @@ public class EditGroupActivity extends AppCompatActivity {
                         //EditGroupActivity.thisActivity.finish();
                         //Intent intent = new Intent(EditGroupActivity.this, DisplayGroupActivity.class);
                         //startActivity(intent);
-                        EditGroupActivity.this.finish();
+
+                        //EditGroupActivity.this.finish();
+
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("result",resp);
+                        setResult(RESULT_OK,returnIntent);
+                        finish();
+
+                        //or
+                        //Intent returnIntent = new Intent();
+                        //setResult(RESULT_CANCELED, returnIntent);
+                        //finish();
                     }
                     else
                     {
@@ -232,9 +257,6 @@ public class EditGroupActivity extends AppCompatActivity {
                     Toast.makeText(EditGroupActivity.this,t.getMessage(),Toast.LENGTH_LONG).show();
                 }
             });
-
-            Toast.makeText(EditGroupActivity.this, "NIC", Toast.LENGTH_LONG).show();
-
         }
         return true;
     }

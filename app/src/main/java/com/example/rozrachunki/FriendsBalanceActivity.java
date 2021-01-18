@@ -35,7 +35,7 @@ public class FriendsBalanceActivity extends AppCompatActivity  {
 
         owesYouTextView = findViewById(R.id.user_owes_you);
         youOweTextView = findViewById(R.id.you_owe_user);
-        usernameTextView = findViewById(R.id.user_number)
+        usernameTextView = findViewById(R.id.user_number);
 
         username = getIntent().getExtras().getString("username");
         owesYou = getIntent().getExtras().getInt("owesYou");

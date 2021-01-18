@@ -150,7 +150,7 @@ public class DisplayGroupActivity extends AppCompatActivity {
                 //DisplayGroupActivity.thisActivity.finish();
                 Intent intent = new Intent(thisActivity, EditGroupActivity.class);
                 intent.putExtra("id", id);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
                 //finish();
 
                 return true;
@@ -180,6 +180,20 @@ public class DisplayGroupActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+
+            if (resultCode == RESULT_OK) {
+                this.recreate(); // odświeżanie aktywności
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Do nothing?
+            }
         }
     }
     /*public void addFabFunction(View view) {

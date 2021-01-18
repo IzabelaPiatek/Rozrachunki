@@ -118,6 +118,9 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
 
                     for (GroupJson group : groups) {
 
+                        //DODAĆ  WYŚWIETLANIE NAZWY GRUPY!!!
+
+
                         //fillGroupName.setText(group.getName());
 
                         //arrayList.add(group.getName());
