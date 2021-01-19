@@ -65,6 +65,11 @@
             android:theme="@style/Theme.Rozrachunki.NoActionBar"/>
 
         <activity
+            android:name=".AddFriendToGroupActivity"
+            android:label="Dodaj członków do grupy"
+/>
+
+        <activity
             android:name=".FriendsBalanceActivity"
             android:parentActivityName=".FriendsActivity"
             android:label="" />

@@ -1,6 +1,8 @@
 package com.example.rozrachunki;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -18,10 +20,20 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.rozrachunki.classes.DataStorage;
+import com.example.rozrachunki.classes.Friend;
+import com.example.rozrachunki.classes.FriendsAdapter;
+import com.example.rozrachunki.remote.ApiUtils;
+import com.example.rozrachunki.services.FriendshipService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,10 +42,16 @@ import java.util.ArrayList;
  */
 public class FragmentMembers extends Fragment {
 
+    private FriendshipService friendshipService;
+    private ArrayList<Friend> friends;
+    private FriendsAdapter friendsAdapter = null;
+    private ArrayList<Friend> friendsList = new ArrayList<>();
     Button addMember;
     public static Activity thisActivity;
-    final String[] items = new String[] { "Jarek Kaczmarek", "Angelika Kalika", "Kacper Kaca",
-            "Kamila Idylla", "Marek Parek", "Iza Ibiza", "Emilia Cecylia" };
+    final String[] items = new String[] { "Jarek ", "Angelika ", "Kacper ",  "Kamila ", "Marek " };
+    boolean[] checkedItems;
+    ArrayList<Integer> userItems = new ArrayList<>();
+    RecyclerView recyclerView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -88,6 +106,9 @@ public class FragmentMembers extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        friendshipService = ApiUtils.getFriendshipService();
+       // recyclerView = view.findViewById(R.id.listviewFragment1);
+
         int count = 1;
         //Jeśli nie ma członków to wyświetl tego TextView
         if (count == 0)
@@ -114,16 +135,97 @@ public class FragmentMembers extends Fragment {
             list.setAdapter(adapter);
         }
 
+       /* Call<ArrayList<Friend>> call2 = friendshipService.getUserFriends(DataStorage.getUser().getId());
+        call2.enqueue(new Callback<ArrayList<Friend>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Friend>> call2, Response<ArrayList<Friend>> response) {
+                friends = response.body();
+                if (friends != null) {
+                    friendsList = new ArrayList<>();
 
+                    for (Friend friend : friends) {
 
+                        }
+
+                        //friendsAdapter.notifyDataSetChanged();
+                    }
+
+                    //friendsAdapter = new FriendsAdapter(getContext(), friendsList);
+                    ArrayAdapter<Friend> dataAdapter;
+                    dataAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+                   // spinner
+                    //recyclerView.setAdapter(friendsAdapter);
+
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<Friend>> call2, Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+*/
+        //checkedItems = new boolean[items.length];
 
         addMember = view.findViewById(R.id.add_memberBTN);
         addMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent intent = new Intent(view.getContext(), AddFriendsActivity.class);
-                //view.getContext().startActivity(intent);
+
+                Intent intent = new Intent(view.getContext(), AddFriendToGroupActivity.class);
+                view.getContext().startActivity(intent);
+
+                /*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Wybierz członków grupy");
+                builder.setMultiChoiceItems(items, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
+                        if(isChecked){
+                            if(!userItems.contains(position)){
+                                userItems.add(position);
+                            } else{
+                                userItems.remove(position);
+                            }
+                        }
+
+                    }
+                });
+                builder.setCancelable(false);
+                builder.setPositiveButton("Dodaj", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        String item = "";
+                        for(int i = 0; i < userItems.size(); i++){
+                            item = item + items[userItems.get(i)];
+                            if(i != userItems.size() -1){
+                                item = item + ", ";
+
+                            }
+                        }
+                        //wyswietlanie na liście
+                    }
+                });
+                builder.setNegativeButton("Powrót", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.setNeutralButton("Odznacz wszystkie", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        for(int i = 0; i < checkedItems.length; i++){
+                            checkedItems[i] = false;
+                            userItems.clear();
+                        }
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                */
+
             }
+
         });
 
     }
