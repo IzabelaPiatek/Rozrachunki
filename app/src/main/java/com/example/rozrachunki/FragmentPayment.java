@@ -2,24 +2,32 @@ package com.example.rozrachunki;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.rozrachunki.classes.PaymentJson;
+import com.example.rozrachunki.remote.ApiUtils;
+import com.example.rozrachunki.services.PaymentService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,9 +38,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class FragmentPayment extends Fragment {
 
     public static Activity thisActivity;
+    private PaymentService paymentService;
+    ArrayList<String> listToDisplay = new ArrayList<>();
     RecyclerView paymentList;
-    final String[] items = new String[] { "Browarek", "Pizza Per Te", "Zakupy Biedronka",
-            "Paliwko", "Ciastko w Anabilis", "Obiad w Alcali", "Bilety lotnicze" };
+    //final String[] items = new String[] { "Browarek", "Pizza Per Te", "Zakupy Biedronka",
+     //       "Paliwko", "Ciastko w Anabilis", "Obiad w Alcali", "Bilety lotnicze" };
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -41,6 +51,8 @@ public class FragmentPayment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    TextView textView;
 
     public FragmentPayment() {
         // Required empty public constructor
@@ -72,7 +84,53 @@ public class FragmentPayment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        paymentService = ApiUtils.getPaymentService();
 
+        Call<ArrayList<PaymentJson>> call2 = paymentService.getAllForGroup(DisplayGroupActivity.groupId);
+        call2.enqueue(new Callback<ArrayList<PaymentJson>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<ArrayList<PaymentJson>> call2, Response<ArrayList<PaymentJson>> response) {
+                ArrayList<PaymentJson> payments = response.body();
+                if (payments != null) {
+
+                    for (PaymentJson p : payments) {
+                        listToDisplay.add(p.getDescription());
+                    }
+
+                    if (listToDisplay.size() == 0)
+                    {
+                        RelativeLayout llMain = getView().findViewById(R.id.relative2);
+                        textView = new TextView(getView().getContext());
+                        textView.setText("Nie dodano żadnej płatności");
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT
+                        );
+                        //textView.setId("");
+                        textView.setLayoutParams(params);
+                        textView.setTextSize(15);
+                        textView.setPadding(50,50,50,50);
+                        textView.setGravity(Gravity.CENTER);
+                        llMain.addView(textView);
+                    }
+                    //Jeśli są płatności to wyświetl listview
+                    else if (listToDisplay.size() > 0)
+                    {
+                        textView.setVisibility(View.GONE);
+                        // nie wiem czy może zostać listview ale jego po prostu łatwiej mi było oprogramować
+                        ListView list = (ListView) getView().findViewById(R.id.listviewFragment2);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listToDisplay);
+                        list.setAdapter(adapter);
+                    }
+
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<PaymentJson>> call2, Throwable t) {
+                Toast.makeText(FragmentPayment.thisActivity, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -86,17 +144,16 @@ public class FragmentPayment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-       /* paymentList = view.findViewById(R.id.listviewFragment2);
+        /*paymentList = view.findViewById(R.id.listviewFragment2);
         paymentList.setHasFixedSize(true);
         paymentList.setLayoutManager(new LinearLayoutManager(thisActivity));*/
 
-        int count = 0;
 
         //Jeśli nie ma płatności to wyświetl tego TextView
-        if (count == 0)
+        if (listToDisplay.size() == 0)
         {
             RelativeLayout llMain = view.findViewById(R.id.relative2);
-            TextView textView = new TextView(view.getContext());
+            textView = new TextView(view.getContext());
             textView.setText("Nie dodano żadnej płatności");
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -109,11 +166,11 @@ public class FragmentPayment extends Fragment {
             llMain.addView(textView);
         }
         //Jeśli są płatności to wyświetl listview
-        else if (count == 1)
+        else if (listToDisplay.size() > 0)
         {
             // nie wiem czy może zostać listview ale jego po prostu łatwiej mi było oprogramować
             ListView list = (ListView)view.findViewById(R.id.listviewFragment2);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listToDisplay);
             list.setAdapter(adapter);
         }
 
@@ -122,6 +179,8 @@ public class FragmentPayment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), PaymentActivity.class);
+                intent.putExtra("id", DisplayGroupActivity.groupId);
+                intent.putExtra("name", DisplayGroupActivity.groupName);
                 view.getContext().startActivity(intent);
             }
         });

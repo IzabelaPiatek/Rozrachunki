@@ -42,7 +42,8 @@ public class DisplayGroupActivity extends AppCompatActivity {
     TextView displayGroupName;
     ImageView groupImageView;
     RecyclerView group_recyclerView;
-    Integer id;
+    public static Integer groupId;
+    public static String groupName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,8 @@ public class DisplayGroupActivity extends AppCompatActivity {
         thisActivity = this;
         groupService = ApiUtils.getGroupService();
 
-        id = getIntent().getExtras().getInt("id");
+        groupId = getIntent().getExtras().getInt("id");
+        groupName = getIntent().getExtras().getString("name");
 
         //getSupportActionBar().hide();
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -91,7 +93,7 @@ public class DisplayGroupActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
 
-        Call<GroupJson> call2 = groupService.getGroup(id);
+        Call<GroupJson> call2 = groupService.getGroup(groupId);
         call2.enqueue(new Callback<GroupJson>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -149,14 +151,14 @@ public class DisplayGroupActivity extends AppCompatActivity {
                 //Toast.makeText(DisplayGroupActivity.this, "Edytuj grupę", Toast.LENGTH_LONG).show();
                 //DisplayGroupActivity.thisActivity.finish();
                 Intent intent = new Intent(thisActivity, EditGroupActivity.class);
-                intent.putExtra("id", id);
+                intent.putExtra("id", groupId);
                 startActivityForResult(intent, 1);
                 //finish();
 
                 return true;
             case R.id.nav_delete_group:
 
-                Call<Integer> call2 = groupService.delete(id);
+                Call<Integer> call2 = groupService.delete(groupId);
                 call2.enqueue(new Callback<Integer>() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override

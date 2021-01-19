@@ -71,6 +71,8 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
     ArrayList<User> selectedUsers = new ArrayList<>();
     ArrayList<GroupJson> groups = new ArrayList<GroupJson>();
     ArrayList<UserAmountPOJO> usersDebtsAmounts = new ArrayList<UserAmountPOJO>();
+    int groupId;
+    String groupName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,10 +81,14 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        groupId = getIntent().getExtras().getInt("id");
+        groupName = getIntent().getExtras().getString("name");
 
         imageView = findViewById(R.id.image_view_choose_image_payment);
         chooseImage = findViewById(R.id.choose_image_paymentBTN);
         fillGroupName = findViewById(R.id.fill_group_name);
+
+        fillGroupName.setText(groupName);
 
         chooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,11 +123,6 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
                 if (groups != null) {
 
                     for (GroupJson group : groups) {
-
-                        //DODAĆ  WYŚWIETLANIE NAZWY GRUPY!!!
-
-
-                        //fillGroupName.setText(group.getName());
 
                         //arrayList.add(group.getName());
                     }
@@ -293,10 +294,7 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
                 }
             }
 
-
-                    //TODO id group na sztywnoooooo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-            Call<PaymentJson> call2 = paymentService.add(new PaymentJson(null, 3, DataStorage.getUser().getId(), Integer.parseInt(amount.getText().toString()), description.getText().toString(), date, inputData, note.getText().toString(), false, paymentOption, breakdowns));
+            Call<PaymentJson> call2 = paymentService.add(new PaymentJson(null, groupId, DataStorage.getUser().getId(), Integer.parseInt(amount.getText().toString()), description.getText().toString(), date, inputData, note.getText().toString(), false, paymentOption, breakdowns));
             call2.enqueue(new Callback<PaymentJson>() {
                 @Override
                 public void onResponse(Call<PaymentJson> call2, Response<PaymentJson> response) {
@@ -305,10 +303,13 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
                     if (resp != null)
                     {
                         Toast.makeText(PaymentActivity.this,"Zapisano pomyślnie", Toast.LENGTH_LONG).show();
-                        //LoginActivity.thisActivity.finish();
-                        //Intent intent = new Intent(view.getContext(), LoginActivity.class);
-                        //view.getContext().startActivity(intent);
-                        //finish();
+
+                        DisplayGroupActivity.thisActivity.finish();
+                        Intent intent = new Intent(PaymentActivity.this, DisplayGroupActivity.class);
+                        intent.putExtra("id", groupId);
+                        intent.putExtra("name", groupName);
+                        startActivity(intent);
+                        finish();
                     }
                     else {
                         Toast.makeText(PaymentActivity.this,"Błąd dodawania płatności", Toast.LENGTH_LONG).show();
@@ -343,7 +344,7 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
             paymentOption = 3;
         }
 
-        Call<ArrayList<User>> call2 = groupService.getGroupMembers(11);    //id grupy ustawione na sztywno do testow !
+        Call<ArrayList<User>> call2 = groupService.getGroupMembers(groupId);
         call2.enqueue(new Callback<ArrayList<User>>() {
             @Override
             public void onResponse(Call<ArrayList<User>> call2, Response<ArrayList<User>> response) {

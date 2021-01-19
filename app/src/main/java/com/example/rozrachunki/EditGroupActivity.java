@@ -24,7 +24,6 @@ import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.GroupService;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import androidx.annotation.NonNull;
@@ -137,8 +136,6 @@ public class EditGroupActivity extends AppCompatActivity {
                             //inputData = getBytes(iStream);
 
                         } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
                             e.printStackTrace();
                         }
 

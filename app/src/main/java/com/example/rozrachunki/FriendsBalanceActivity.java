@@ -46,7 +46,7 @@ public class FriendsBalanceActivity extends AppCompatActivity  {
         if (owesYou - youOwe > 0) {
             owesYouTextView.setText(username + " jest Ci dluzny " + owesYou + " zł.");
         } else if (owesYou - youOwe < 0) {
-            youOweTextView.setText("Ty jestes dluzna " + username + " " + youOwe + " zł");
+            youOweTextView.setText("Ty jestes dluzny " + username + " " + youOwe + " zł");
         } else {
             owesYouTextView.setText("Jesteście rozliczeni.");
             youOweTextView.setVisibility(View.GONE);
