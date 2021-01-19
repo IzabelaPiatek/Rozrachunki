@@ -8,6 +8,7 @@ public class Friend {
     Integer youOwe;
     Integer owe;
     byte[] image;
+    private boolean isSelected = false;
 
     public Friend(Integer id, String username, Integer owesYou, Integer youOwe, byte[] image) {
         this.id = id;
@@ -67,5 +68,12 @@ public class Friend {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+    public boolean isSelected() {
+        return isSelected;
     }
 }
