@@ -82,6 +82,9 @@
         <activity android:name=".PaymentActivity"
             android:label="Dodaj płatność"
             />
+        <activity android:name=".DisplayPaymentActivity"
+            android:label="Szczegóły płatności"
+            />
 
         <activity android:name=".EditDataActivity" />
         <activity android:name=".UserAccountActivity" />
