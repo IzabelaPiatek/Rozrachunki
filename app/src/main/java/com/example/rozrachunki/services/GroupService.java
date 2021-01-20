@@ -2,6 +2,7 @@ package com.example.rozrachunki.services;
 
 import com.example.rozrachunki.classes.GroupJson;
 import com.example.rozrachunki.model.Group;
+import com.example.rozrachunki.model.GroupMember;
 import com.example.rozrachunki.model.User;
 
 import java.util.ArrayList;
@@ -33,4 +34,6 @@ public interface GroupService {
     @HTTP(method = "POST", path = "groups/updateGroup", hasBody = true)
     Call<Integer> updateGroup(@Body Group group);
 
+    @POST("groupmembers/add/{idGroup}/{username}")
+    Call<GroupMember> add(@Path("idGroup") Integer idGroup, @Path("username") String username);
 }

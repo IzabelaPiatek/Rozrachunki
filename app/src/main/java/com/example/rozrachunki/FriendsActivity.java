@@ -47,6 +47,8 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
     private RecyclerView recyclerView;
     private Button filterBTN, addFriendsBTN;
     private TextView filteredOption;
+    private TextView youOwe;
+    private int youOweQuantity = 0;
     private FriendshipService friendshipService;
     private ArrayList<Friend> friends;
     private FriendsAdapter friendsAdapter = null;
@@ -66,6 +68,8 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
         recyclerView = findViewById(R.id.listviewF);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        youOwe = findViewById(R.id.username_ET_fill);
 
         //friendsAdapter = new FriendsAdapter(FriendsActivity.this, friendsList);
         //recyclerView.setAdapter(friendsAdapter);
@@ -110,8 +114,14 @@ public class FriendsActivity extends AppCompatActivity implements SingleChoiceDi
                         } else if (friendship.getPhoneNumber() != null) {
                             friendsList.add(friendship.getPhoneNumber()); //contactList.forEach( (c) -> { if (c.getPhone().equals(friendship.getPhoneNumber())) return c; } )
                         }*/
-
+                        youOweQuantity += friend.getOwe();
                         //friendsAdapter.notifyDataSetChanged();
+                    }
+
+                    if (youOweQuantity > 0) {
+                        youOwe.setText("Jesteś dłużny " + youOweQuantity + "zł");
+                    } else {
+                        youOwe.setText("Nie masz długu");
                     }
 
                     friendsAdapter = new FriendsAdapter(FriendsActivity.this, friendsList);

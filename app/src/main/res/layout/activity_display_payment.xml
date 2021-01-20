@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/name_of_payment"
-                android:text="Nazwa płatności //uzupełnić  "
+                android:text="Nazwa płatności  "
                 android:layout_marginTop="9dp"
                 android:layout_marginLeft="9dp"
 
@@ -35,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/value_of_payment"
-                android:text="kwota // wypełnić"
+                android:text="kwota"
                 android:layout_marginLeft="9dp"
                 android:layout_marginBottom="9dp"
                 android:padding="5dp"
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/name_of_owner"
                 android:textColor="@color/blue4"
-                android:text="Płatnosć dodana przez: Iza //uzupełnić "
+                android:text="Płatnosć dodana przez: Iza"
                 android:layout_marginLeft="9dp"
                 android:padding="5dp"
                 android:textSize="10sp" />

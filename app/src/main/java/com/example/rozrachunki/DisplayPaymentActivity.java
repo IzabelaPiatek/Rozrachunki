@@ -1,60 +1,32 @@
 package com.example.rozrachunki;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.rozrachunki.classes.DataStorage;
-import com.example.rozrachunki.classes.GroupJson;
-import com.example.rozrachunki.classes.InsertAmountsAdapter;
-import com.example.rozrachunki.classes.PaymentJson;
-import com.example.rozrachunki.classes.UserAmountPOJO;
-import com.example.rozrachunki.model.Breakdown;
-import com.example.rozrachunki.model.User;
+import com.example.rozrachunki.classes.PaymentWithOwnerJson;
 import com.example.rozrachunki.remote.ApiUtils;
-import com.example.rozrachunki.services.GroupService;
 import com.example.rozrachunki.services.PaymentService;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DisplayPaymentActivity extends AppCompatActivity{
+
+    PaymentService paymentService;
+    PaymentWithOwnerJson payment;
+    TextView nameTV;
+    TextView valueTV;
+    TextView ownerTV;
+    int paymentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +35,37 @@ public class DisplayPaymentActivity extends AppCompatActivity{
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        paymentId = getIntent().getExtras().getInt("id");
 
+        nameTV = findViewById(R.id.name_of_payment);
+        valueTV = findViewById(R.id.value_of_payment);
+        ownerTV = findViewById(R.id.name_of_owner);
+
+        paymentService = ApiUtils.getPaymentService();
+
+        Call<PaymentWithOwnerJson> call2 = paymentService.get(paymentId);
+        call2.enqueue(new Callback<PaymentWithOwnerJson>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<PaymentWithOwnerJson> call2, Response<PaymentWithOwnerJson> response) {
+                payment = response.body();
+                if (payment != null) {
+
+                    nameTV.setText(payment.getDescription());
+                    valueTV.setText("Kwota: " + payment.getAmount());
+                    ownerTV.setText("Zapłacone przez " + payment.getOwnerUsername());
+
+                    //TODO wypełnić listview(?)
+
+                }
+            }
+            @Override
+            public void onFailure(Call<PaymentWithOwnerJson> call2, Throwable t) {
+                Toast.makeText(FragmentPayment.thisActivity, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,8 +79,28 @@ public class DisplayPaymentActivity extends AppCompatActivity{
 
         if( id == R.id.nav_delete_payments){
 
-            Toast.makeText(DisplayPaymentActivity.this,"Płatność usunięta", Toast.LENGTH_LONG).show();
+            Call<Integer> call2 = paymentService.delete(paymentId);
+            call2.enqueue(new Callback<Integer>() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public void onResponse(Call<Integer> call2, Response<Integer> response) {
+                    Integer resp = response.body();
+                    if (resp != null) {
+                        Toast.makeText(DisplayPaymentActivity.this,"Płatność usunięta", Toast.LENGTH_LONG).show();
 
+                        DisplayGroupActivity.thisActivity.finish();
+                        Intent intent = new Intent(DisplayPaymentActivity.this, DisplayGroupActivity.class);
+                        intent.putExtra("id", DisplayGroupActivity.groupId);
+                        intent.putExtra("name", DisplayGroupActivity.groupName);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+                @Override
+                public void onFailure(Call<Integer> call2, Throwable t) {
+                    Toast.makeText(FragmentPayment.thisActivity, t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
         }
         return true;
     }

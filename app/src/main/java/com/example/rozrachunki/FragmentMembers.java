@@ -1,16 +1,9 @@
 package com.example.rozrachunki;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,15 +15,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rozrachunki.classes.DataStorage;
 import com.example.rozrachunki.classes.Friend;
 import com.example.rozrachunki.classes.FriendsAdapter;
+import com.example.rozrachunki.model.User;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.FriendshipService;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.rozrachunki.services.GroupService;
 
 import java.util.ArrayList;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,12 +40,15 @@ import retrofit2.Response;
 public class FragmentMembers extends Fragment {
 
     private FriendshipService friendshipService;
+    private GroupService groupService;
     private ArrayList<Friend> friends;
     private FriendsAdapter friendsAdapter = null;
     private ArrayList<Friend> friendsList = new ArrayList<>();
     Button addMember;
     public static Activity thisActivity;
-    final String[] items = new String[] { "Jarek ", "Angelika ", "Kacper ",  "Kamila ", "Marek " };
+    ArrayList<String> listToDisplay = new ArrayList<>();
+    TextView textView;
+    //final String[] items = new String[] { "Jarek ", "Angelika ", "Kacper ",  "Kamila ", "Marek " };
     boolean[] checkedItems;
     ArrayList<Integer> userItems = new ArrayList<>();
     RecyclerView recyclerView;
@@ -92,7 +92,52 @@ public class FragmentMembers extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        groupService = ApiUtils.getGroupService();
 
+        Call<ArrayList<User>> call2 = groupService.getGroupMembers(DisplayGroupActivity.groupId);
+        call2.enqueue(new Callback<ArrayList<User>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<ArrayList<User>> call2, Response<ArrayList<User>> response) {
+                ArrayList<User> members = response.body();
+                if (members != null) {
+
+                    for (User m : members) {
+                        listToDisplay.add(m.getUsername());
+                    }
+
+                    if (listToDisplay.size() == 0)
+                    {
+                        RelativeLayout llMain = getView().findViewById(R.id.relative1);
+                        textView = new TextView(getView().getContext());
+                        textView.setText("Jesteś tu sam! Dodaj nowego członka, aby móc tworzyć rozliczenia!");
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT
+                        );
+                        textView.setLayoutParams(params);
+                        textView.setTextSize(15);
+                        textView.setPadding(50,50,50,50);
+                        textView.setGravity(Gravity.CENTER);
+                        llMain.addView(textView);
+                    }
+                    //Jeśli są płatności to wyświetl listview
+                    else if (listToDisplay.size() > 0)
+                    {
+                        textView.setVisibility(View.GONE);
+
+                        ListView list = (ListView) getView().findViewById(R.id.listviewFragment1);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listToDisplay);
+                        list.setAdapter(adapter);
+                    }
+
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<User>> call2, Throwable t) {
+                Toast.makeText(FragmentPayment.thisActivity, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -111,10 +156,10 @@ public class FragmentMembers extends Fragment {
 
         int count = 1;
         //Jeśli nie ma członków to wyświetl tego TextView
-        if (count == 0)
+        if (listToDisplay.size() == 0)
         {
             RelativeLayout llMain = view.findViewById(R.id.relative1);
-            TextView textView = new TextView(view.getContext());
+            textView = new TextView(view.getContext());
             textView.setText("Jesteś tu sam! Dodaj nowego członka, aby móc tworzyć rozliczenia!");
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -127,44 +172,14 @@ public class FragmentMembers extends Fragment {
             llMain.addView(textView);
         }
         //Jeśli są członkowie to wyświetl listview
-        else if (count == 1)
+        else if (listToDisplay.size() > 0)
         {
          // nie wiem czy może zostać listview ale jego po prostu łatwiej mi było oprogramować
             ListView list = (ListView)view.findViewById(R.id.listviewFragment1);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listToDisplay);
             list.setAdapter(adapter);
         }
 
-       /* Call<ArrayList<Friend>> call2 = friendshipService.getUserFriends(DataStorage.getUser().getId());
-        call2.enqueue(new Callback<ArrayList<Friend>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Friend>> call2, Response<ArrayList<Friend>> response) {
-                friends = response.body();
-                if (friends != null) {
-                    friendsList = new ArrayList<>();
-
-                    for (Friend friend : friends) {
-
-                        }
-
-                        //friendsAdapter.notifyDataSetChanged();
-                    }
-
-                    //friendsAdapter = new FriendsAdapter(getContext(), friendsList);
-                    ArrayAdapter<Friend> dataAdapter;
-                    dataAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item);
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-                   // spinner
-                    //recyclerView.setAdapter(friendsAdapter);
-
-                }
-            }
-            @Override
-            public void onFailure(Call<ArrayList<Friend>> call2, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-*/
         //checkedItems = new boolean[items.length];
 
         addMember = view.findViewById(R.id.add_memberBTN);
@@ -173,6 +188,7 @@ public class FragmentMembers extends Fragment {
             public void onClick(View view) {
 
                 Intent intent = new Intent(view.getContext(), AddFriendToGroupActivity.class);
+                intent.putExtra("id", DisplayGroupActivity.groupId);
                 view.getContext().startActivity(intent);
 
                 /*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -29,44 +30,25 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentPayment#newInstance} factory method to
- * create an instance of this fragment.
- */
-
 public class FragmentPayment extends Fragment {
 
     public static Activity thisActivity;
     private PaymentService paymentService;
     ArrayList<String> listToDisplay = new ArrayList<>();
     RecyclerView paymentList;
-    //final String[] items = new String[] { "Browarek", "Pizza Per Te", "Zakupy Biedronka",
-     //       "Paliwko", "Ciastko w Anabilis", "Obiad w Alcali", "Bilety lotnicze" };
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    ListView listView;
+    ArrayList<PaymentJson> payments = new ArrayList<>();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     TextView textView;
 
     public FragmentPayment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentPayment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static FragmentPayment newInstance(String param1, String param2) {
         FragmentPayment fragment = new FragmentPayment();
         Bundle args = new Bundle();
@@ -91,7 +73,7 @@ public class FragmentPayment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<ArrayList<PaymentJson>> call2, Response<ArrayList<PaymentJson>> response) {
-                ArrayList<PaymentJson> payments = response.body();
+                payments = response.body();
                 if (payments != null) {
 
                     for (PaymentJson p : payments) {
@@ -107,21 +89,18 @@ public class FragmentPayment extends Fragment {
                                 RelativeLayout.LayoutParams.MATCH_PARENT,
                                 RelativeLayout.LayoutParams.MATCH_PARENT
                         );
-                        //textView.setId("");
                         textView.setLayoutParams(params);
                         textView.setTextSize(15);
                         textView.setPadding(50,50,50,50);
                         textView.setGravity(Gravity.CENTER);
                         llMain.addView(textView);
                     }
-                    //Jeśli są płatności to wyświetl listview
                     else if (listToDisplay.size() > 0)
                     {
                         textView.setVisibility(View.GONE);
-                        // nie wiem czy może zostać listview ale jego po prostu łatwiej mi było oprogramować
-                        ListView list = (ListView) getView().findViewById(R.id.listviewFragment2);
+                        listView = getView().findViewById(R.id.listviewFragment2);
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listToDisplay);
-                        list.setAdapter(adapter);
+                        listView.setAdapter(adapter);
                     }
 
                 }
@@ -136,7 +115,6 @@ public class FragmentPayment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_tab2, container, false);
     }
 
@@ -144,12 +122,8 @@ public class FragmentPayment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        /*paymentList = view.findViewById(R.id.listviewFragment2);
-        paymentList.setHasFixedSize(true);
-        paymentList.setLayoutManager(new LinearLayoutManager(thisActivity));*/
+        //listView = view.findViewById(R.id.listviewFragment2);
 
-
-        //Jeśli nie ma płatności to wyświetl tego TextView
         if (listToDisplay.size() == 0)
         {
             RelativeLayout llMain = view.findViewById(R.id.relative2);
@@ -165,14 +139,25 @@ public class FragmentPayment extends Fragment {
             textView.setGravity(Gravity.CENTER);
             llMain.addView(textView);
         }
-        //Jeśli są płatności to wyświetl listview
         else if (listToDisplay.size() > 0)
         {
-            // nie wiem czy może zostać listview ale jego po prostu łatwiej mi było oprogramować
-            ListView list = (ListView)view.findViewById(R.id.listviewFragment2);
+            listView = (ListView)view.findViewById(R.id.listviewFragment2);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listToDisplay);
-            list.setAdapter(adapter);
+            listView.setAdapter(adapter);
         }
+
+        listView = view.findViewById(R.id.listviewFragment2);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Intent intent = new Intent(getView().getContext(), DisplayPaymentActivity.class);
+                intent.putExtra("id", payments.get(position).getId());
+
+                startActivity(intent);
+            }
+        });
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,7 @@
 package com.example.rozrachunki.services;
 
 import com.example.rozrachunki.classes.PaymentJson;
+import com.example.rozrachunki.classes.PaymentWithOwnerJson;
 
 import java.util.ArrayList;
 
@@ -20,4 +21,10 @@ public interface PaymentService {
 
     @GET("payments/getAllForGroup/{idGroup}")
     Call<ArrayList<PaymentJson>> getAllForGroup(@Path("idGroup") Integer idGroup);
+
+    @GET("payments/get/{id}")
+    Call<PaymentWithOwnerJson> get(@Path("id") Integer id);
+
+    @POST("payments/delete/{id}")
+    Call<Integer> delete(@Path("id") Integer id);
 }
