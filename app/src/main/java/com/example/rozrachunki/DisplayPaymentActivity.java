@@ -5,12 +5,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rozrachunki.classes.BorrowerJson;
 import com.example.rozrachunki.classes.PaymentWithOwnerJson;
 import com.example.rozrachunki.remote.ApiUtils;
 import com.example.rozrachunki.services.PaymentService;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -21,6 +26,7 @@ import retrofit2.Response;
 
 public class DisplayPaymentActivity extends AppCompatActivity{
 
+    ArrayList<BorrowerJson> borrowers = new ArrayList<>();
     PaymentService paymentService;
     PaymentWithOwnerJson payment;
     TextView nameTV;
@@ -64,6 +70,42 @@ public class DisplayPaymentActivity extends AppCompatActivity{
                 Toast.makeText(FragmentPayment.thisActivity, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+
+        Call<ArrayList<BorrowerJson>> call = paymentService.getBorrowers(paymentId);
+        call.enqueue(new Callback<ArrayList<BorrowerJson>>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<ArrayList<BorrowerJson>> call, Response<ArrayList<BorrowerJson>> response) {
+                borrowers = response.body();
+                if (borrowers != null) {
+
+                    ArrayList<String> breakdownsList = new ArrayList<>();
+
+                    for (BorrowerJson borrower : borrowers) {
+                        if (borrower.getPaidByHim() != 0 && !borrower.isSettled()) {
+                            breakdownsList.add(borrower.getUsername() + " zapłacił/a " + borrower.getPaidByHim() + " zł i jest dłużny/a " + borrower.getOwe() + " zł");
+                        } else if (borrower.getPaidByHim() != 0) {
+                            breakdownsList.add(borrower.getUsername() + " zapłacił/a " + borrower.getPaidByHim() + " zł");
+                        } else if (borrower.getOwe() != 0 && !borrower.isSettled()) {
+                            breakdownsList.add(borrower.getUsername() + " jest dłużny/a " + borrower.getOwe() + " zł");
+                        }
+                    }
+
+                    //TODO wypełnić listview
+
+                    ListView listView = findViewById(R.id.listview);
+
+                    ArrayAdapter arrayAdapter = new ArrayAdapter(DisplayPaymentActivity.this, android.R.layout.simple_list_item_1, breakdownsList);
+                    listView.setAdapter(arrayAdapter);
+
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<BorrowerJson>> call, Throwable t) {
+                Toast.makeText(FragmentPayment.thisActivity, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
 
     }
 

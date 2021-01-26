@@ -1,5 +1,6 @@
 package com.example.rozrachunki.services;
 
+import com.example.rozrachunki.classes.BorrowerJson;
 import com.example.rozrachunki.classes.PaymentJson;
 import com.example.rozrachunki.classes.PaymentWithOwnerJson;
 
@@ -27,4 +28,7 @@ public interface PaymentService {
 
     @POST("payments/delete/{id}")
     Call<Integer> delete(@Path("id") Integer id);
+
+    @GET("payments/getBorrowers/{idPayment}")
+    Call<ArrayList<BorrowerJson>> getBorrowers(@Path("idPayment") Integer idPayment);
 }

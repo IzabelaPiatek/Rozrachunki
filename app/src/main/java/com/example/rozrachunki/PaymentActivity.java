@@ -494,8 +494,6 @@ public class PaymentActivity extends AppCompatActivity implements SingleChoiceDi
             }
         });
 
-        usersDebtsAmounts.add(new UserAmountPOJO(1, "ada", 0));
-
         InsertAmountsAdapter adapter = new InsertAmountsAdapter(PaymentActivity.this, usersDebtsAmounts);
         rv.setAdapter(adapter);
 
