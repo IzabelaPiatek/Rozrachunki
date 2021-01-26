@@ -37,20 +37,13 @@
             android:label="Stwórz grupę"
             android:parentActivityName=".GroupsActivity" />
 
-        <activity android:name=".DisplayGroupNoMemberActivity"
-            android:parentActivityName=".GroupsActivity"
-            android:label=""/>
-
         <activity android:name=".DisplayGroupActivity"
             android:parentActivityName=".GroupsActivity"
             android:label=""/>
         <activity
             android:name=".EditGroupActivity"
             android:label="Edytuj grupę"
-            android:parentActivityName=".DisplayGroupNoMemberActivity"/>
-
-        <activity android:name=".AddMemberToGroupActivity"
-            android:label="Dodaj członka"/>
+            android:parentActivityName=".DisplayGroupActivity"/>
 
         <activity
             android:name=".FriendsActivity"
@@ -67,6 +60,7 @@
         <activity
             android:name=".AddFriendToGroupActivity"
             android:label="Dodaj członków do grupy"
+            android:parentActivityName=".DisplayGroupActivity"
 />
 
         <activity
@@ -81,6 +75,7 @@
 
         <activity android:name=".PaymentActivity"
             android:label="Dodaj płatność"
+            android:parentActivityName=".DisplayGroupActivity"
             />
         <activity android:name=".DisplayPaymentActivity"
             android:label="Szczegóły płatności"

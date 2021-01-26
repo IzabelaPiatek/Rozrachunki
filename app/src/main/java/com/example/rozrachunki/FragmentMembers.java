@@ -1,6 +1,8 @@
 package com.example.rozrachunki;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -52,6 +55,8 @@ public class FragmentMembers extends Fragment {
     boolean[] checkedItems;
     ArrayList<Integer> userItems = new ArrayList<>();
     RecyclerView recyclerView;
+    ListView list;
+    ArrayAdapter<String> adapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -92,6 +97,8 @@ public class FragmentMembers extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        //list = (ListView) getView().findViewById(R.id.listviewFragment1);
+
         groupService = ApiUtils.getGroupService();
 
         Call<ArrayList<User>> call2 = groupService.getGroupMembers(DisplayGroupActivity.groupId);
@@ -127,7 +134,7 @@ public class FragmentMembers extends Fragment {
                         textView.setVisibility(View.GONE);
 
                         ListView list = (ListView) getView().findViewById(R.id.listviewFragment1);
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listToDisplay);
+                        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listToDisplay);
                         list.setAdapter(adapter);
                     }
 
@@ -175,12 +182,36 @@ public class FragmentMembers extends Fragment {
         else if (listToDisplay.size() > 0)
         {
          // nie wiem czy może zostać listview ale jego po prostu łatwiej mi było oprogramować
-            ListView list = (ListView)view.findViewById(R.id.listviewFragment1);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listToDisplay);
+            list = (ListView)view.findViewById(R.id.listviewFragment1);
+           adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listToDisplay);
             list.setAdapter(adapter);
+            /*list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    AlertDialog.Builder adb=new AlertDialog.Builder(getContext());
+                    adb.setTitle("Usuń");
+                    adb.setMessage("Czy na pewno chcesz usunąć " + listToDisplay.get(position) + " z listy grup?");
+                    final int positionToRemove = position;
+                    adb.setNegativeButton("Anuluj", null);
+                    adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            listToDisplay.remove(positionToRemove);
+                            adapter.notifyDataSetChanged();
+
+                        };
+                    });
+                    adb.show();
+
+                    return false;
+                }
+            });*/
         }
 
         //checkedItems = new boolean[items.length];
+
+
+
 
         addMember = view.findViewById(R.id.add_memberBTN);
         addMember.setOnClickListener(new View.OnClickListener() {

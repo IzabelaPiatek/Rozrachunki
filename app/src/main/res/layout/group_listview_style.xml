@@ -9,7 +9,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/group_listview"
-        android:src="@drawable/ic_baseline_monetization"
+        android:src="@drawable/discoball"
 
         />
 
@@ -21,7 +21,6 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/group_listview"
         android:layout_marginLeft="20sp"
-        android:text="lalalalalalla"
         android:padding="5dp"
         />
     <ImageView

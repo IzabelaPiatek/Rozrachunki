@@ -24,10 +24,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/name_of_payment"
-                android:text="Nazwa płatności  "
+                android:text=""
                 android:layout_marginTop="9dp"
                 android:layout_marginLeft="9dp"
-
                 android:padding="2dp"
                 android:textSize="17sp" />
 
