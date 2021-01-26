@@ -61,8 +61,6 @@ public class DisplayPaymentActivity extends AppCompatActivity{
                     valueTV.setText("Kwota: " + payment.getAmount());
                     ownerTV.setText("Zapłacone przez " + payment.getOwnerUsername());
 
-                    //TODO wypełnić listview(?)
-
                 }
             }
             @Override
@@ -90,8 +88,6 @@ public class DisplayPaymentActivity extends AppCompatActivity{
                             breakdownsList.add(borrower.getUsername() + " jest dłużny/a " + borrower.getOwe() + " zł");
                         }
                     }
-
-                    //TODO wypełnić listview
 
                     ListView listView = findViewById(R.id.listview);
 
